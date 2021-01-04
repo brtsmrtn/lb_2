@@ -2,18 +2,78 @@
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <link rel="icon" href="%PUBLIC_URL%/favicon.ico" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="theme-color" content="#000000" />
+    <meta http-equiv="Cache-control" content="no-cache" />
+    <meta http-equiv="Expires" content="-1" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta
-      name="description"
-      content="Web site created using create-react-app"
+      name="viewport"
+      content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=0"
     />
-    <link rel="apple-touch-icon" href="%PUBLIC_URL%/logo192.png" />
-    <!--
-      manifest.json provides metadata used when your web app is installed on a
-      user's mobile device or desktop. See https://developers.google.com/web/fundamentals/web-app-manifest/
-    -->
+    <title>LINK BISCUIT</title>
+    <meta name="author" content="Martin Bartoš" />
+    <meta name="description" content="" />
+    <meta name="keywords" content="" />
+    <meta name="robots" content="index,follow" />
+    <link
+      rel="apple-touch-icon"
+      sizes="57x57"
+      href="%PUBLIC_URL%/img/ico/apple-icon-57x57.png"
+    />
+    <link
+      rel="apple-touch-icon"
+      sizes="60x60"
+      href="%PUBLIC_URL%/img/ico/apple-icon-60x60.png"
+    />
+    <link
+      rel="apple-touch-icon"
+      sizes="72x72"
+      href="%PUBLIC_URL%/img/ico/apple-icon-72x72.png"
+    />
+    <link
+      rel="apple-touch-icon"
+      sizes="76x76"
+      href="%PUBLIC_URL%/img/ico/apple-icon-76x76.png"
+    />
+    <link
+      rel="apple-touch-icon"
+      sizes="114x114"
+      href="%PUBLIC_URL%/img/ico/apple-icon-114x114.png"
+    />
+    <link
+      rel="apple-touch-icon"
+      sizes="120x120"
+      href="%PUBLIC_URL%/img/ico/apple-icon-120x120.png"
+    />
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="32x32"
+      href="%PUBLIC_URL%/img/ico/favicon-32x32.png"
+    />
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="96x96"
+      href="%PUBLIC_URL%/img/ico/favicon-96x96.png"
+    />
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="16x16"
+      href="%PUBLIC_URL%/img/ico/favicon-16x16.png"
+    />
+    <meta name="msapplication-TileColor" content="#ffffff" />
+    <meta
+      name="msapplication-TileImage"
+      content="%PUBLIC_URL%/img/ico/ms-icon-70x70.png"
+    />
+    <meta name="theme-color" content="#ffffff" />
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="%PUBLIC_URL%/css/v0.css"
+      media="screen"
+    />
     <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
     <!--
       Notice the use of %PUBLIC_URL% in the tags above.
@@ -24,11 +84,50 @@
       work correctly both with client-side routing and a non-root public URL.
       Learn how to configure a non-root public URL by running `npm run build`.
     -->
-    <title>React App</title>
   </head>
   <body>
-    <noscript>You need to enable JavaScript to run this app.</noscript>
-    <div id="root"></div>
+    <!-- <main>
+			<section class="intro row">
+				<div class="intro_info col flex-60 pad-r">
+					<div class="row pad-r h-big item-center">
+						<h1 class="blue strong">Link Biscuit</h1>
+					</div>
+					<div class="row pad-r h-norm item-center">
+						<span class="dimgray">&#9654; Use this place for storing interesting pieces of the web you <b>actually</b> want to read.</span>
+					</div>
+				</div>
+				<div class="intro_input col flex-40">
+					<form class="col-rev flex-100">
+					<div class="row h-norm item-center">
+						<div class="col flex-75 pad-r item-center">
+							<span id="help" class="green"></span>
+						</div>
+						<div class="col flex-25 item-center self-center">
+							<input class="submit h-norm content-center strong" id="submit" type="submit" value="Add link" disabled>
+						</div>
+					</div>
+					<div class="row h-big item-center">
+						<input class="link h-norm blue pad-r pad-l" id="link" type="text" autocomplete="off" spellcheck="false" autocorrect="off" required placeholder="https://medium.com/swlh/sexism-in-tech-an-inconvenient-truth-26df0329e39">
+					</div>
+					</form>
+				</div>
+			</section>
+			<section id="listing" class="listing">
+				<table>
+					<thead>
+						<tr>
+							<th class="flex-7-5 strong silver">State</th>
+							<th class="flex-80 left strong silver">Link</th>
+							<th class="flex-12-5 strong silver">Added</th>
+						</tr>
+					</thead>
+					<tbody>
+					</tbody>
+				</table>
+
+			</section>
+		</main> -->
+    <main id="root"></main>
     <!--
       This HTML file is a template.
       If you open it directly in the browser, you will see an empty page.
