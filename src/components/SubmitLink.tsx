@@ -1,8 +1,11 @@
 import React from "react";
-import { validateLink } from "../functions/validateLink";
+import { isLinkDuplicate } from "../functions/isLinkDuplicate";
+import { isLinkValid } from "../functions/isLinkValid";
+import { ListItem } from "../types/ListItem";
 import { UrlType } from "../types/Url";
 
 type SubmitProps = UrlType & {
+  items: ListItem[];
   onClick: (event: React.FormEvent<HTMLInputElement>) => void;
 };
 
@@ -12,7 +15,10 @@ export class SubmitLink extends React.Component<SubmitProps> {
       <input
         type="submit"
         value="Add link"
-        disabled={!validateLink(this.props.url)}
+        disabled={
+          !isLinkValid(this.props.url) ||
+          isLinkDuplicate(this.props.url, this.props.items)
+        }
         onClick={this.props.onClick}
       />
     );
