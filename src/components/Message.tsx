@@ -10,7 +10,7 @@ export class Message extends React.Component<MessageProps> {
     if (isValid) {
       return <p>v pho</p>;
     } else {
-      return <p>not v poho</p>;
+      return <p>not v pho</p>;
     }
   }
 }

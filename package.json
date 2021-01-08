@@ -1,7 +1,7 @@
 {
   "homepage": "https://brtsmrtn.github.io/lb_2/",
   "name": "lb_2",
-  "version": "0.2",
+  "version": "0.1.0",
   "private": true,
   "dependencies": {
     "@testing-library/jest-dom": "^5.11.6",
@@ -20,6 +20,7 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
+    "gh-pages-deploy": "react-scripts build && rm -rf docs/* && mv build docs",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "predeploy": "npm run build",
@@ -46,4 +47,5 @@
   "devDependencies": {
     "gh-pages": "^3.1.0"
   }
+  
 }
