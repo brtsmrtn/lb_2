@@ -10,13 +10,11 @@ type ListingItemProps = {
 export class ListingItem extends React.Component<ListingItemProps> {
   render() {
     return (
-      <li>
-        <label>
-          {this.props.item.id}
-          {this.props.item.url}
-          {this.props.item.date}
-        </label>
-      </li>
+      <tr>
+        <td>{this.props.item.id}</td>
+        <td>{this.props.item.url}</td>
+        <td>{this.props.item.date}</td>
+      </tr>
     );
   }
 }
