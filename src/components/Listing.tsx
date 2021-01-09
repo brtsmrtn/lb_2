@@ -8,10 +8,10 @@ export type ListingProps = {
 };
 export const Listing: React.FC<ListingProps> = ({ items }) => {
   return (
-    <ul>
+    <table>
       {items.map((item) => (
         <ListingItem item={item} key={item.id} />
       ))}
-    </ul>
+    </table>
   );
 };

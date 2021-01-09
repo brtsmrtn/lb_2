@@ -7,16 +7,26 @@ import { ListItem } from "./types/ListItem";
 
 const App = () => {
   const submitForm = () => {
-    setItems([...items, { id: 2, url: url, date: "dfdd" }]);
+    setItems([
+      ...items,
+      {
+        id: items.length + 1,
+        url: url,
+        date: new Date().toLocaleString(),
+      },
+    ]);
+    setUrl("");
   };
-  const initialItems: ListItem[] = [{ id: 1, url: "fff", date: "dddd" }];
+  const initialItems: ListItem[] = [
+    //{ id: 1, url: "fff", date: new Date().toLocaleString() },
+  ];
   const [url, setUrl] = useState("");
   const [items, setItems] = useState(initialItems);
   return (
     <div>
-      <AddLink url={url} onChange={setUrl} />
+      <AddLink url={url.toLowerCase()} onChange={setUrl} />
       <SubmitLink url={url} items={items} onClick={submitForm} />
-      <Message url={url}></Message>
+      <Message url={url} items={items}></Message>
       <Listing items={items}></Listing>
     </div>
   );
