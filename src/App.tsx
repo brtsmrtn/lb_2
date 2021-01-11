@@ -7,12 +7,13 @@ import { ListItem } from "./types/ListItem";
 
 const App = () => {
   const submitForm = () => {
+    let currentDate = new Date();
     setItems([
       ...items,
       {
         id: items.length + 1,
         url: url,
-        date: new Date().toLocaleString(),
+        date: currentDate.toLocaleString(),
       },
     ]);
     setUrl("");
