@@ -4,11 +4,10 @@ on:
   pull_request:
   push:
     branches:
-      - main
+      - fix-build-final
 
 jobs:
   build-and-deploy:
-    
     runs-on: ubuntu-latest
 
     steps:
