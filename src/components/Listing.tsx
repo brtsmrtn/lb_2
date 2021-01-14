@@ -9,6 +9,8 @@ export type ListingProps = {
 export const Listing: React.FC<ListingProps> = ({ items }) => {
   return (
     <table>
+      <th>URL</th>
+      <th>Date</th>
       {items.map((item) => (
         <ListingItem item={item} key={item.id} />
       ))}

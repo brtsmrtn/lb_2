@@ -3,6 +3,7 @@ import { isLinkProvided } from "./isLinkProvided";
 import { linkStartsWithHttps } from "./linkStartsWithHttps";
 import { isLinkValid } from "./isLinkValid";
 import { isLinkDuplicate } from "./isLinkDuplicate";
+import { errorMessages } from "./errorMessages";
 
 export function errorMessageGenerator(
   url: string,
@@ -12,15 +13,15 @@ export function errorMessageGenerator(
     if (linkStartsWithHttps(url)) {
       if (isLinkValid(url)) {
         if (isLinkDuplicate(url, items)) {
-          return "This one I've got already!";
+          return errorMessages.find((t) => t.state == "duplicate")!.message;
         } else {
-          return "That link looks good.";
+          return errorMessages.find((t) => t.state == "good")!.message;
         }
       } else {
-        return "That link still needs some sauce.";
+        return errorMessages.find((t) => t.state == "invalid")!.message;
       }
     } else {
-      return "Beginning with http(s):// is a must.";
+      return errorMessages.find((t) => t.state == "missing_prefix")!.message;
     }
   }
 }

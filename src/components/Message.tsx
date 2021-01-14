@@ -12,6 +12,7 @@ export class Message extends React.Component<MessageProps> {
     const { url, items } = this.props;
     const errorMessage = errorMessageGenerator(url, items);
     if (errorMessage) {
+      console.log(items);
       return <p>▶ {errorMessage}</p>;
     } else {
       if (items.length) {
