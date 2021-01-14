@@ -1,3 +1,3 @@
-export function isLinkProvided(url: string) {
+export function isLinkProvided(url: string): boolean {
   return !!url;
 }
