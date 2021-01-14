@@ -13,15 +13,15 @@ export function errorMessageGenerator(
     if (linkStartsWithHttps(url)) {
       if (isLinkValid(url)) {
         if (isLinkDuplicate(url, items)) {
-          return errorMessages.find((t) => t.state == "duplicate")!.message;
+          return errorMessages.find((t) => t.state === "duplicate")!.message;
         } else {
-          return errorMessages.find((t) => t.state == "good")!.message;
+          return errorMessages.find((t) => t.state === "good")!.message;
         }
       } else {
-        return errorMessages.find((t) => t.state == "invalid")!.message;
+        return errorMessages.find((t) => t.state === "invalid")!.message;
       }
     } else {
-      return errorMessages.find((t) => t.state == "missing_prefix")!.message;
+      return errorMessages.find((t) => t.state === "missing_prefix")!.message;
     }
   }
 }
