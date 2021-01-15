@@ -9,6 +9,7 @@ export class ListingItem extends React.Component<ListingItemProps> {
   render() {
     return (
       <tr>
+        <td>{this.props.item.id}</td>
         <td>{this.props.item.url}</td>
         <td>{this.props.item.date}</td>
       </tr>
