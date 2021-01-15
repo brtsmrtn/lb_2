@@ -3,25 +3,27 @@ import { isLinkProvided } from "./isLinkProvided";
 import { linkStartsWithHttps } from "./linkStartsWithHttps";
 import { isLinkValid } from "./isLinkValid";
 import { isLinkDuplicate } from "./isLinkDuplicate";
-import { errorMessages } from "./errorMessages";
+import { errorMessages, ErrorMessageMessage } from "./errorMessages";
 
 export function errorMessageGenerator(
   url: string,
   items: ListItem[]
-): string | undefined {
+): ErrorMessageMessage {
   if (isLinkProvided(url)) {
     if (linkStartsWithHttps(url)) {
       if (isLinkValid(url)) {
         if (isLinkDuplicate(url, items)) {
-          return errorMessages.find((t) => t.state === "duplicate")!.message;
+          return errorMessages.duplicate;
         } else {
-          return errorMessages.find((t) => t.state === "good")!.message;
+          return errorMessages.good;
         }
       } else {
-        return errorMessages.find((t) => t.state === "invalid")!.message;
+        return errorMessages.invalid;
       }
     } else {
-      return errorMessages.find((t) => t.state === "missing_prefix")!.message;
+      return errorMessages.missing_prefix;
     }
+  } else {
+    return undefined;
   }
 }

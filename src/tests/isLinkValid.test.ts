@@ -1,8 +1,6 @@
-import urlsToBeTested from "./urlsToBeTested.json";
+import { urlsToBeTested } from "./urlsToBeTested";
 import { isLinkValid } from "../functions/isLinkValid";
 
-test("all URLs in urlsToBeTested.json pass through isLinkValid function", () => {
-  expect(urlsToBeTested.map((item) => isLinkValid(item.input))).toEqual(
-    urlsToBeTested.map((item) => item.state)
-  );
+test.each(urlsToBeTested)("link %s should be valid = %p", (input, state) => {
+  expect(isLinkValid(input)).toBe(state);
 });
