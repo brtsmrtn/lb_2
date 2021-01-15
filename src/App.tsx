@@ -7,7 +7,7 @@ import { ListItem } from "./types/ListItem";
 
 const App = () => {
   const submitForm = () => {
-    let currentDate = new Date();
+    const currentDate = new Date();
     setItems([
       ...items,
       {

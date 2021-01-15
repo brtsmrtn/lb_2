@@ -35,15 +35,15 @@ class INPUT extends React.Component<Props, States> {
       input.value &&
       (input.value.startsWith("https://") || input.value.startsWith("http://"))
     ) {
-      let disabled = false;
+      const disabled = false;
       if (validateLink(input.value)) {
-        let prompt = "&#9654; That link looks good.";
+        const prompt = "&#9654; That link looks good.";
       } else {
-        let prompt = "&#9654; That link still needs some sauce.";
+        const prompt = "&#9654; That link still needs some sauce.";
       }
     } else {
-      let disabled = true;
-      let prompt = "&#9654; Beginning with <i>http(s)://</i> is a must.";
+      const disabled = true;
+      const prompt = "&#9654; Beginning with <i>http(s)://</i> is a must.";
     }
     this.setState({ value: input.value, prompt: prompt, disabled: disabled });
 
