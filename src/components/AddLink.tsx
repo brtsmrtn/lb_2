@@ -6,7 +6,7 @@ type LinkProps = UrlType & {
 };
 
 export class AddLink extends React.Component<LinkProps> {
-  render() {
+  render(): JSX.Element {
     return (
       <input
         type="text"

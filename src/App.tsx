@@ -5,9 +5,9 @@ import { Message } from "./components/Message";
 import { Listing } from "./components/Listing";
 import { ListItem } from "./types/ListItem";
 
-const App = () => {
+const App = (): JSX.Element => {
   const submitForm = () => {
-    let currentDate = new Date();
+    const currentDate = new Date();
     setItems([
       ...items,
       {
