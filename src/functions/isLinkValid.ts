@@ -1,6 +1,4 @@
-import validator from "validator";
-import isURL from "validator/es/lib/isURL";
-
+import isURL from "validator/lib/isURL";
 export function isLinkValid(url: string): boolean {
-  return isURL(url);
+  return isURL(url, { validate_length: false });
 }
