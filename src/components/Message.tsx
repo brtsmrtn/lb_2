@@ -8,7 +8,7 @@ type MessageProps = UrlType & {
 };
 
 export class Message extends React.Component<MessageProps> {
-  render() {
+  render(): JSX.Element {
     const { url, items } = this.props;
     const errorMessage = errorMessageGenerator(url, items);
     if (errorMessage) {

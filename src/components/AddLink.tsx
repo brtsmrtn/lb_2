@@ -5,7 +5,7 @@ type LinkProps = UrlType & {
   onChange: (event: string) => void;
 };
 
-export class AddLink extends React.Component<LinkProps> {
+export class AddLink extends React.Component<LinkProps, any> {
   render() {
     return (
       <input
