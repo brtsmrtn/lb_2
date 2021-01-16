@@ -10,7 +10,7 @@ type SubmitProps = UrlType & {
 };
 
 export class SubmitLink extends React.Component<SubmitProps> {
-  render() {
+  render(): JSX.Element {
     return (
       <input
         type="submit"

@@ -6,7 +6,7 @@ type ListingItemProps = {
 };
 
 export class ListingItem extends React.Component<ListingItemProps> {
-  render() {
+  render(): JSX.Element {
     return (
       <tr>
         <td>{this.props.item.url}</td>
