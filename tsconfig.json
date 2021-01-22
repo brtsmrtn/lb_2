@@ -7,12 +7,12 @@
     "strict": true,
     "forceConsistentCasingInFileNames": true,
     "noFallthroughCasesInSwitch": true,
-    "module": "ES2020",
+    "module": "esnext",
     "moduleResolution": "node",
     "resolveJsonModule": true,
     "isolatedModules": true,
     "noEmit": true,
-    "jsx": "react",
+    "jsx": "react-jsx",
     "sourceMap": true,
     "declaration": true,
     "noUnusedLocals": true,
@@ -22,5 +22,5 @@
     "allowSyntheticDefaultImports": true
   },
   "include": ["src/**/*"],
-  "exclude": ["node_modules", "build"] // *** The files to not type check ***
+  "exclude": ["node_modules", "build"]
 }
