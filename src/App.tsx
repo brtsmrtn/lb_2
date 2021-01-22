@@ -8,27 +8,38 @@ import { ListItem } from "./types/ListItem";
 const App = (): JSX.Element => {
   const submitForm = () => {
     const currentDate = new Date();
-    setItems([
-      ...items,
+    setUnreadItems([
+      ...unreadItems,
       {
-        id: items.length + 1,
+        id: unreadItems.length + 1,
         url: url,
         date: currentDate.toLocaleString(),
       },
     ]);
     setUrl("");
   };
-  const initialItems: ListItem[] = [
-    //{ id: 1, url: "fff", date: new Date().toLocaleString() },
-  ];
+  const moveItems = (listItem: ListItem) => {
+    const indexToMove = unreadItems.findIndex((it) => it.id === listItem.id);
+    unreadItems.splice(indexToMove, 1);
+    setUnreadItems([...unreadItems]);
+    setReadItems([...readItems, listItem]);
+  };
   const [url, setUrl] = useState("");
-  const [items, setItems] = useState(initialItems);
+  const [unreadItems, setUnreadItems] = useState<ListItem[]>([]);
+  const [readItems, setReadItems] = useState<ListItem[]>([]);
   return (
     <div>
       <AddLink url={url.toLowerCase()} onChange={setUrl} />
-      <SubmitLink url={url} items={items} onClick={submitForm} />
-      <Message url={url} items={items}></Message>
-      <Listing items={items}></Listing>
+      <SubmitLink url={url} items={unreadItems} onClick={submitForm} />
+      <Message url={url} items={unreadItems}></Message>
+      <div>
+        <Listing
+          title="Unread"
+          items={unreadItems}
+          itemChanged={moveItems}
+        ></Listing>
+        <Listing title="Read" items={readItems}></Listing>
+      </div>
     </div>
   );
 };
