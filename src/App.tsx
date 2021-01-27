@@ -4,44 +4,50 @@ import { SubmitLink } from "./components/SubmitLink";
 import { Message } from "./components/Message";
 import { Listing } from "./components/Listing";
 import { ListItem } from "./types/ListItem";
+import "./App.css";
 
-const App = (): JSX.Element => {
+const App: React.FC<Record<string, never>> = () => {
   const submitForm = () => {
     const currentDate = new Date();
-    setUnreadItems([
-      ...unreadItems,
+    setItems([
+      ...items,
       {
-        id: unreadItems.length + 1,
+        id: items.length + 1,
         url: url,
         date: currentDate.toLocaleString(),
+        status: false,
       },
     ]);
     setUrl("");
   };
-  const moveItems = (listItem: ListItem) => {
-    const indexToMove = unreadItems.findIndex((it) => it.id === listItem.id);
-    unreadItems.splice(indexToMove, 1);
-    setUnreadItems([...unreadItems]);
-    setReadItems([...readItems, listItem]);
+  const changeItemStatus = (listItem: ListItem) => {
+    items.splice(
+      items.findIndex((it) => it.id === listItem.id),
+      1
+    );
+    listItem.status = listItem.status === true ? false : true;
+    setItems([...items, listItem]);
   };
   const [url, setUrl] = useState("");
-  const [unreadItems, setUnreadItems] = useState<ListItem[]>([]);
-  const [readItems, setReadItems] = useState<ListItem[]>([]);
+  const [items, setItems] = useState<ListItem[]>([]);
   return (
     <div>
       <AddLink url={url.toLowerCase()} onChange={setUrl} />
-      <SubmitLink url={url} items={unreadItems} onClick={submitForm} />
-      <Message url={url} items={unreadItems}></Message>
+      <SubmitLink url={url} items={items} onClick={submitForm} />
+      <Message url={url} items={items}></Message>
       <div>
         <Listing
-          title="Unread"
-          items={unreadItems}
-          itemChanged={moveItems}
+          title="Links to read"
+          items={items.filter((item) => item.status === false)}
+          itemChanged={changeItemStatus}
         ></Listing>
-        <Listing title="Read" items={readItems}></Listing>
+        <Listing
+          title="Previously read links"
+          items={items.filter((item) => item.status === true)}
+          itemChanged={changeItemStatus}
+        ></Listing>
       </div>
     </div>
   );
 };
-
 export default App;

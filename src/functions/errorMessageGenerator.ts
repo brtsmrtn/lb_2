@@ -11,14 +11,18 @@ export function errorMessageGenerator(
 ): ErrorMessageMessage {
   if (isLinkProvided(url)) {
     if (linkStartsWithHttps(url)) {
-      if (isLinkValid(url)) {
-        if (isLinkDuplicate(url, items)) {
-          return errorMessages.duplicate;
-        } else {
-          return errorMessages.good;
-        }
+      if (url.length >= 2083) {
+        return errorMessages.too_long;
       } else {
-        return errorMessages.invalid;
+        if (isLinkValid(url)) {
+          if (isLinkDuplicate(url, items)) {
+            return errorMessages.duplicate;
+          } else {
+            return errorMessages.good;
+          }
+        } else {
+          return errorMessages.invalid;
+        }
       }
     } else {
       return errorMessages.missing_prefix;
