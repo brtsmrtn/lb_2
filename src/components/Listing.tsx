@@ -1,39 +1,35 @@
 import React from "react";
 import { ListItem } from "../types/ListItem";
 import { ListingItem } from "../components/ListingItem";
-import { ItemType } from "../types/ItemType";
 
 export type ListingProps = {
   items: ListItem[];
-  itemChanged?: (listItem: ListItem) => void;
-  //onChange: (event: any) => void;
+  title: "Previously read links" | "Links to read";
+  itemChanged: (listItem: ListItem) => void;
 };
-export const Listing: React.FC<ListingProps & ItemType> = ({
-  title,
-  items,
-  itemChanged,
-}) => {
-  return (
-    <>
-      <h2>{`${title} items`}</h2>
-      <table>
-        <thead>
-          <tr>
-            <th>URL</th>
-            <th>Date</th>
-          </tr>
-        </thead>
-        <tbody>
-          {items.map((item) => (
-            <ListingItem
-              item={item}
-              key={item.id}
-              title={title}
-              itemChanged={itemChanged}
-            />
-          ))}
-        </tbody>
-      </table>
-    </>
-  );
-};
+export class Listing extends React.Component<ListingProps, ListingProps> {
+  render(): JSX.Element {
+    return (
+      <div>
+        <h2>{`${this.props.title} (${this.props.items.length})`}</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>URL</th>
+              <th>Date</th>
+            </tr>
+          </thead>
+          <tbody>
+            {this.props.items.map((item) => (
+              <ListingItem
+                item={item}
+                key={item.id}
+                itemChanged={this.props.itemChanged}
+              />
+            ))}
+          </tbody>
+        </table>
+      </div>
+    );
+  }
+}
