@@ -7,7 +7,7 @@ export type ListingProps = {
   title: "Previously read links" | "Links to read";
   itemChanged: (listItem: ListItem) => void;
 };
-export class Listing extends React.Component<ListingProps, ListingProps> {
+export class Listing extends React.Component<ListingProps> {
   render(): JSX.Element {
     return (
       <div>

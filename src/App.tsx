@@ -6,7 +6,7 @@ import { Listing } from "./components/Listing";
 import { ListItem } from "./types/ListItem";
 import "./App.css";
 
-const App = (): JSX.Element => {
+const App: React.FC<Record<string, never>> = () => {
   const submitForm = () => {
     const currentDate = new Date();
     setItems([
@@ -50,5 +50,4 @@ const App = (): JSX.Element => {
     </div>
   );
 };
-
 export default App;
