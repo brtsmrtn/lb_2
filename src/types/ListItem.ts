@@ -1,5 +1,5 @@
 export type ListItem = {
-  id: number;
+  id: string;
   url: string;
   date: string;
   status: boolean;

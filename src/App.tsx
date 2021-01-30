@@ -1,32 +1,40 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { AddLink } from "./components/AddLink";
 import { SubmitLink } from "./components/SubmitLink";
 import { Message } from "./components/Message";
 import { Listing } from "./components/Listing";
 import { ListItem } from "./types/ListItem";
+import { databaseRef } from "./FirebaseContext";
 import "./App.css";
 
-const App: React.FC<Record<string, never>> = () => {
+const App = (): JSX.Element => {
+  useEffect(() => {
+    const listener = databaseRef.child("items").on("value", (snapshot) => {
+      const fetchedTasks: ListItem[] = [];
+      snapshot.forEach((childSnapshot) => {
+        const key = childSnapshot.key;
+        const data = childSnapshot.val();
+        fetchedTasks.push({ id: key, ...data });
+      });
+      setItems(fetchedTasks);
+    });
+    return () => databaseRef.child("items").off("value", listener);
+  });
   const submitForm = () => {
     const currentDate = new Date();
-    setItems([
-      ...items,
-      {
-        id: items.length + 1,
-        url: url,
-        date: currentDate.toLocaleString(),
-        status: false,
-      },
-    ]);
+    const newItemKey = databaseRef.child("items").push().key;
+    const itemData = {
+      id: newItemKey,
+      url: url,
+      date: currentDate.toLocaleString(),
+      status: false,
+    };
     setUrl("");
+    databaseRef.child("items/" + newItemKey).update(itemData);
   };
   const changeItemStatus = (listItem: ListItem) => {
-    items.splice(
-      items.findIndex((it) => it.id === listItem.id),
-      1
-    );
-    listItem.status = listItem.status === true ? false : true;
-    setItems([...items, listItem]);
+    const newStatus = listItem.status === true ? false : true;
+    databaseRef.child("items/" + listItem.id).update({ status: newStatus });
   };
   const [url, setUrl] = useState("");
   const [items, setItems] = useState<ListItem[]>([]);
@@ -35,18 +43,16 @@ const App: React.FC<Record<string, never>> = () => {
       <AddLink url={url.toLowerCase()} onChange={setUrl} />
       <SubmitLink url={url} items={items} onClick={submitForm} />
       <Message url={url} items={items}></Message>
-      <div>
-        <Listing
-          title="Links to read"
-          items={items.filter((item) => item.status === false)}
-          itemChanged={changeItemStatus}
-        ></Listing>
-        <Listing
-          title="Previously read links"
-          items={items.filter((item) => item.status === true)}
-          itemChanged={changeItemStatus}
-        ></Listing>
-      </div>
+      <Listing
+        title="Links to read"
+        items={items.filter((item) => item.status === false)}
+        itemChanged={changeItemStatus}
+      ></Listing>
+      <Listing
+        title="Previously read links"
+        items={items.filter((item) => item.status === true)}
+        itemChanged={changeItemStatus}
+      ></Listing>
     </div>
   );
 };
