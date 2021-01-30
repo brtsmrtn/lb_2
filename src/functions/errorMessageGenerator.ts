@@ -4,6 +4,7 @@ import { linkStartsWithHttps } from "./linkStartsWithHttps";
 import { isLinkValid } from "./isLinkValid";
 import { isLinkDuplicate } from "./isLinkDuplicate";
 import { errorMessages, ErrorMessageMessage } from "./errorMessages";
+import { maxLinkLength } from "../utils/constants";
 
 export function errorMessageGenerator(
   url: string,
@@ -11,7 +12,7 @@ export function errorMessageGenerator(
 ): ErrorMessageMessage {
   if (isLinkProvided(url)) {
     if (linkStartsWithHttps(url)) {
-      if (url.length >= 2083) {
+      if (url.length >= maxLinkLength) {
         return errorMessages.too_long;
       } else {
         if (isLinkValid(url)) {
