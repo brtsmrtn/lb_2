@@ -11,7 +11,9 @@ export class Listing extends React.Component<ListingProps> {
   render(): JSX.Element {
     return (
       <div>
-        <h2>{`${this.props.title} (${this.props.items.length})`}</h2>
+        <h2>
+          {this.props.title} ({this.props.items.length})
+        </h2>
         <table>
           <thead>
             <tr>

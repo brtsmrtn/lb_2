@@ -19,7 +19,7 @@ export class ListingItem extends React.Component<ListingItemProps> {
             color="primary"
             onClick={() => this.props.itemChanged(this.props.item)}
           >
-            {this.props.item.status === true ? "Unread" : "Read"}
+            {!!this.props.item.alreadyRead ? "Unread" : "Read"}
           </Button>
         </td>
       </tr>
