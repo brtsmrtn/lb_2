@@ -10,6 +10,7 @@ export type ListingProps = {
   itemChanged: (listItem: ListItem) => void;
   tagAdded: (item: ListItem, tag: Tag) => void;
   tagDeleted: (item: ListItem, tag: Tag) => void;
+  updateAvailableTags: (title: string) => Promise<any>;
 };
 export class Listing extends React.Component<ListingProps> {
   render(): JSX.Element {
@@ -30,10 +31,11 @@ export class Listing extends React.Component<ListingProps> {
               <ListingItem
                 item={item}
                 key={item.id}
-                tags={this.props.tags}
+                availableTags={this.props.tags}
                 itemChanged={this.props.itemChanged}
                 tagAdded={this.props.tagAdded}
                 tagDeleted={this.props.tagDeleted}
+                updateAvailableTags={this.props.updateAvailableTags}
               />
             ))}
           </tbody>

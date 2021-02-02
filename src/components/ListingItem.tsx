@@ -7,10 +7,11 @@ import TagList from "./TagList";
 
 type ListingItemProps = {
   item: ListItem;
-  tags: Tag[];
+  availableTags: Tag[];
   itemChanged: (listItem: ListItem) => void;
   tagAdded: (item: ListItem, tag: Tag) => void;
   tagDeleted: (item: ListItem, tag: Tag) => void;
+  updateAvailableTags: (title: string) => Promise<any>;
 };
 
 export class ListingItem extends React.Component<ListingItemProps> {
@@ -30,10 +31,11 @@ export class ListingItem extends React.Component<ListingItemProps> {
         </td>
         <td>
           <TagButton
-            tags={this.props.tags}
+            availableTags={this.props.availableTags}
             item={this.props.item}
             tagAdded={this.props.tagAdded}
             tagDeleted={this.props.tagDeleted}
+            updateAvailableTags={this.props.updateAvailableTags}
           />
         </td>
         <td>

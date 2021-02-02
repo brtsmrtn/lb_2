@@ -30,6 +30,24 @@ const App = (): JSX.Element => {
     );
     setItems([...items]);
   };
+  const updateAvailableTags = (title: string) => {
+    const tagExists = tags.find((t) => t.title === title);
+    if (!tagExists) {
+      const returnTag: Tag = {
+        id: (tags.length + 1).toString(),
+        title: title,
+        color: "primary",
+      };
+      setTags([...tags, returnTag]);
+      return new Promise<{ ok: number; item: Tag }>((res) => {
+        res({ ok: 1, item: returnTag });
+      });
+    } else {
+      return new Promise<{ ok: number; item: Tag }>((res) => {
+        res({ ok: 0, item: tagExists });
+      });
+    }
+  };
   const addTag = (listItem: ListItem, tag: Tag) => {
     items.splice(
       items.findIndex((it) => it.id === listItem.id),
@@ -52,12 +70,13 @@ const App = (): JSX.Element => {
     );
     setItems([...items]);
   };
-  const [url, setUrl] = useState("");
-  const [items, setItems] = useState<ListItem[]>([]);
-  const [tags] = useState<Tag[]>([
+  const defaultTags: Tag[] = [
     { id: "1", title: "NLP", color: "primary" },
     { id: "2", title: "Thesis", color: "secondary" },
-  ]);
+  ];
+  const [url, setUrl] = useState("");
+  const [items, setItems] = useState<ListItem[]>([]);
+  const [tags, setTags] = useState<Tag[]>(defaultTags);
   return (
     <div>
       <AddLink url={url.toLowerCase()} onChange={setUrl} />
@@ -71,6 +90,7 @@ const App = (): JSX.Element => {
           tags={tags}
           tagAdded={addTag}
           tagDeleted={deleteTag}
+          updateAvailableTags={updateAvailableTags}
         ></Listing>
         <Listing
           title="Previously read links"
@@ -79,6 +99,7 @@ const App = (): JSX.Element => {
           tags={tags}
           tagAdded={addTag}
           tagDeleted={deleteTag}
+          updateAvailableTags={updateAvailableTags}
         ></Listing>
       </div>
     </div>

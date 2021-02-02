@@ -7,22 +7,25 @@ import DialogContent from "@material-ui/core/DialogContent";
 import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import { Tag } from "../types/Tag";
+import Autocomplete from "@material-ui/lab/Autocomplete";
 import TagList from "./TagList";
 import { ListItem } from "../types/ListItem";
+import Chip from "@material-ui/core/Chip";
 
 export type TagButtonProps = {
   item: ListItem;
-  tags: Tag[];
+  availableTags: Tag[];
   tagAdded: (item: ListItem, tag: Tag) => void;
   tagDeleted: (item: ListItem, tag: Tag) => void;
+  updateAvailableTags: (title: string) => Promise<any>;
 };
 export class TagButton extends React.Component<
   TagButtonProps,
-  { dialogOpen: boolean }
+  { dialogOpen: boolean; assignedTags: Tag[] }
 > {
   constructor(props: TagButtonProps) {
     super(props);
-    this.state = { dialogOpen: false };
+    this.state = { dialogOpen: false, assignedTags: props.item.tags };
   }
   render(): JSX.Element {
     let dialogText = "No tag is assigned.";
@@ -66,18 +69,66 @@ export class TagButton extends React.Component<
             </DialogContentText>
             <TagList
               editable={false}
-              fromTags={this.props.tags}
+              fromTags={this.props.availableTags}
               item={this.props.item}
               tagAdded={this.props.tagAdded}
               tagDeleted={this.props.tagDeleted}
             />
-            <TextField
-              label="New tag"
-              disabled
-              id={"text-field"}
-              placeholder="Add tag"
-              helperText="Could be 'NLP' or 'Thesis' or whatever else."
-              margin="dense"
+            <Autocomplete
+              multiple
+              id="tags-outlined"
+              options={this.props.availableTags}
+              getOptionLabel={(option) => option.title}
+              defaultValue={[this.props.availableTags[0]]}
+              value={this.props.item.tags}
+              blurOnSelect
+              onChange={(e, value) => {
+                const newTag = value.filter(
+                  (n) => !this.props.item.tags.includes(n)
+                );
+                this.props.tagAdded(this.props.item, newTag[0]);
+              }}
+              renderInput={(params) => (
+                <TextField
+                  {...params}
+                  variant="outlined"
+                  label="Tags"
+                  placeholder="Tags"
+                  onKeyDown={(e) => {
+                    const tagTarget = e.target as HTMLTextAreaElement;
+                    if (e.key === "Enter" && tagTarget.value) {
+                      const tagExists = this.props.availableTags.find(
+                        (t) => t.title === tagTarget.value
+                      );
+                      if (tagExists) {
+                        console.log(
+                          "i should add check whether the one is added or add him right away"
+                        );
+                      } else {
+                        this.props
+                          .updateAvailableTags(tagTarget.value)
+                          .then((res) => {
+                            if (res.ok === 1) {
+                              this.props.tagAdded(this.props.item, res.item);
+                            }
+                          });
+                      }
+                    }
+                  }}
+                />
+              )}
+              renderTags={(tagValue) => {
+                return tagValue.map((option) => (
+                  <Chip
+                    label={option.title}
+                    color={option.color}
+                    key={option.id}
+                    onDelete={() =>
+                      this.props.tagDeleted(this.props.item, option)
+                    }
+                  />
+                ));
+              }}
             />
           </DialogContent>
           <DialogActions>
