@@ -4,6 +4,7 @@ import { Button } from "@material-ui/core";
 import { TagButton } from "./TagButton";
 import { Tag } from "../types/Tag";
 import TagList from "./TagList";
+import { TagResponse } from "../types/TagResponse";
 
 type ListingItemProps = {
   item: ListItem;
@@ -11,7 +12,7 @@ type ListingItemProps = {
   itemChanged: (listItem: ListItem) => void;
   tagAdded: (item: ListItem, tag: Tag) => void;
   tagDeleted: (item: ListItem, tag: Tag) => void;
-  updateAvailableTags: (title: string) => Promise<any>;
+  updateAvailableTags: (title: string) => Promise<TagResponse>;
 };
 
 export class ListingItem extends React.Component<ListingItemProps> {

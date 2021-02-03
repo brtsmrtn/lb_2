@@ -8,39 +8,30 @@ import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import { Tag } from "../types/Tag";
 import Autocomplete from "@material-ui/lab/Autocomplete";
-import TagList from "./TagList";
 import { ListItem } from "../types/ListItem";
 import Chip from "@material-ui/core/Chip";
+import { TagResponse } from "../types/TagResponse";
 
 export type TagButtonProps = {
   item: ListItem;
   availableTags: Tag[];
   tagAdded: (item: ListItem, tag: Tag) => void;
   tagDeleted: (item: ListItem, tag: Tag) => void;
-  updateAvailableTags: (title: string) => Promise<any>;
+  updateAvailableTags: (title: string) => Promise<TagResponse>;
 };
 export class TagButton extends React.Component<
   TagButtonProps,
-  { dialogOpen: boolean; assignedTags: Tag[] }
+  { dialogOpen: boolean; assignedTags: Tag[]; helperText: string }
 > {
   constructor(props: TagButtonProps) {
     super(props);
-    this.state = { dialogOpen: false, assignedTags: props.item.tags };
+    this.state = {
+      dialogOpen: false,
+      assignedTags: props.item.tags,
+      helperText: "",
+    };
   }
   render(): JSX.Element {
-    let dialogText = "No tag is assigned.";
-    if (this.props.item.tags.length) {
-      const numberOfAssignedTags = this.props.item.tags.length;
-      if (numberOfAssignedTags) {
-        if (numberOfAssignedTags === 1) {
-          dialogText = "This one tag is assigned.";
-        } else {
-          dialogText = `These ${numberOfAssignedTags} tags are assigned:`;
-        }
-      } else {
-        dialogText = "No tag is assigned:";
-      }
-    }
     return (
       <div>
         <Button
@@ -57,54 +48,60 @@ export class TagButton extends React.Component<
         >
           <DialogTitle id={"form-dialog-title"}>Add tags</DialogTitle>
           <DialogContent>
-            <DialogContentText>{dialogText}</DialogContentText>
-            <TagList
-              editable={true}
-              item={this.props.item}
-              tagAdded={this.props.tagAdded}
-              tagDeleted={this.props.tagDeleted}
-            />
             <DialogContentText>
-              Pick a tag or create new one (not yet functioning).
+              Add new tag or pick one from the list.
             </DialogContentText>
-            <TagList
-              editable={false}
-              fromTags={this.props.availableTags}
-              item={this.props.item}
-              tagAdded={this.props.tagAdded}
-              tagDeleted={this.props.tagDeleted}
-            />
             <Autocomplete
+              fullWidth
               multiple
+              disableClearable
               id="tags-outlined"
               options={this.props.availableTags}
               getOptionLabel={(option) => option.title}
-              defaultValue={[this.props.availableTags[0]]}
               value={this.props.item.tags}
-              blurOnSelect
-              onChange={(e, value) => {
-                const newTag = value.filter(
-                  (n) => !this.props.item.tags.includes(n)
-                );
-                this.props.tagAdded(this.props.item, newTag[0]);
+              filterSelectedOptions
+              selectOnFocus
+              autoComplete
+              clearOnBlur={false}
+              onChange={(e, value, reason) => {
+                if (reason !== "remove-option") {
+                  const newTag = value.filter(
+                    (n) => !this.props.item.tags.includes(n)
+                  );
+                  if (newTag) {
+                    this.props.tagAdded(this.props.item, newTag[0]);
+                  }
+                }
+                this.setState({ helperText: "" });
               }}
               renderInput={(params) => (
                 <TextField
                   {...params}
                   variant="outlined"
-                  label="Tags"
-                  placeholder="Tags"
-                  onKeyDown={(e) => {
+                  label={this.state.helperText}
+                  autoFocus
+                  onChange={(e) => {
                     const tagTarget = e.target as HTMLTextAreaElement;
-                    if (e.key === "Enter" && tagTarget.value) {
-                      const tagExists = this.props.availableTags.find(
+                    if (tagTarget) {
+                      const tagExists = this.props.item.tags.find(
                         (t) => t.title === tagTarget.value
                       );
-                      if (tagExists) {
-                        console.log(
-                          "i should add check whether the one is added or add him right away"
-                        );
+                      if (!tagExists && tagTarget.value) {
+                        this.setState({
+                          helperText: "Submit with 'Enter'",
+                        });
                       } else {
+                        this.setState({ helperText: "" });
+                      }
+                    }
+                  }}
+                  onKeyPress={(e) => {
+                    const tagTarget = e.target as HTMLTextAreaElement;
+                    const tagExists = this.props.availableTags.find(
+                      (t) => t.title === tagTarget.value
+                    );
+                    if (e.key === "Enter" && tagTarget.value) {
+                      if (!tagExists) {
                         this.props
                           .updateAvailableTags(tagTarget.value)
                           .then((res) => {
@@ -117,18 +114,22 @@ export class TagButton extends React.Component<
                   }}
                 />
               )}
-              renderTags={(tagValue) => {
-                return tagValue.map((option) => (
+              renderTags={(value, getTagProps) =>
+                value.map((option, index) => (
                   <Chip
                     label={option.title}
-                    color={option.color}
+                    {...getTagProps({ index })}
                     key={option.id}
+                    style={{
+                      backgroundColor: option.color,
+                      color: "#757575",
+                    }}
                     onDelete={() =>
                       this.props.tagDeleted(this.props.item, option)
                     }
                   />
-                ));
-              }}
+                ))
+              }
             />
           </DialogContent>
           <DialogActions>
@@ -136,7 +137,7 @@ export class TagButton extends React.Component<
               onClick={() => this.setState({ dialogOpen: false })}
               color="primary"
             >
-              Cancel
+              Close
             </Button>
           </DialogActions>
         </Dialog>

@@ -2,6 +2,7 @@ import React from "react";
 import { ListItem } from "../types/ListItem";
 import { ListingItem } from "../components/ListingItem";
 import { Tag } from "../types/Tag";
+import { TagResponse } from "../types/TagResponse";
 
 export type ListingProps = {
   items: ListItem[];
@@ -10,7 +11,7 @@ export type ListingProps = {
   itemChanged: (listItem: ListItem) => void;
   tagAdded: (item: ListItem, tag: Tag) => void;
   tagDeleted: (item: ListItem, tag: Tag) => void;
-  updateAvailableTags: (title: string) => Promise<any>;
+  updateAvailableTags: (title: string) => Promise<TagResponse>;
 };
 export class Listing extends React.Component<ListingProps> {
   render(): JSX.Element {

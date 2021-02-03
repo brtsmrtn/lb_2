@@ -4,8 +4,10 @@ import { SubmitLink } from "./components/SubmitLink";
 import { Message } from "./components/Message";
 import { Listing } from "./components/Listing";
 import { ListItem } from "./types/ListItem";
-import "./App.css";
+import "./App";
 import { Tag } from "./types/Tag";
+
+import { COLORS } from "./utils/constants";
 
 const App = (): JSX.Element => {
   const submitForm = () => {
@@ -33,10 +35,12 @@ const App = (): JSX.Element => {
   const updateAvailableTags = (title: string) => {
     const tagExists = tags.find((t) => t.title === title);
     if (!tagExists) {
+      const tagId = tags.length + 1;
+      const chipColor = tagId > 11 ? 1 : tagId;
       const returnTag: Tag = {
-        id: (tags.length + 1).toString(),
+        id: tagId.toString(),
         title: title,
-        color: "primary",
+        color: COLORS[chipColor],
       };
       setTags([...tags, returnTag]);
       return new Promise<{ ok: number; item: Tag }>((res) => {
@@ -52,7 +56,12 @@ const App = (): JSX.Element => {
     items.splice(
       items.findIndex((it) => it.id === listItem.id),
       1,
-      { ...listItem, tags: [...listItem.tags, tag] }
+      {
+        ...listItem,
+        tags: [...listItem.tags, tag].sort(
+          (a, b) => parseFloat(a.id) - parseFloat(b.id)
+        ),
+      }
     );
     setItems([...items]);
   };
@@ -70,13 +79,9 @@ const App = (): JSX.Element => {
     );
     setItems([...items]);
   };
-  const defaultTags: Tag[] = [
-    { id: "1", title: "NLP", color: "primary" },
-    { id: "2", title: "Thesis", color: "secondary" },
-  ];
   const [url, setUrl] = useState("");
   const [items, setItems] = useState<ListItem[]>([]);
-  const [tags, setTags] = useState<Tag[]>(defaultTags);
+  const [tags, setTags] = useState<Tag[]>([]);
   return (
     <div>
       <AddLink url={url.toLowerCase()} onChange={setUrl} />
