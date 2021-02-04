@@ -4,15 +4,15 @@ import { Button } from "@material-ui/core";
 import { TagButton } from "./TagButton";
 import { Tag } from "../types/Tag";
 import TagList from "./TagList";
-import { TagResponse } from "../types/TagResponse";
+import { PromiseTag } from "../types/PromiseTag";
 
 type ListingItemProps = {
   item: ListItem;
-  availableTags: Tag[];
+  knownTags: Tag[];
   itemChanged: (listItem: ListItem) => void;
   tagAdded: (item: ListItem, tag: Tag) => void;
   tagDeleted: (item: ListItem, tag: Tag) => void;
-  updateAvailableTags: (title: string) => Promise<TagResponse>;
+  updateKnownTags: (title: string) => Promise<PromiseTag>;
 };
 
 export class ListingItem extends React.Component<ListingItemProps> {
@@ -32,11 +32,11 @@ export class ListingItem extends React.Component<ListingItemProps> {
         </td>
         <td>
           <TagButton
-            availableTags={this.props.availableTags}
+            knownTags={this.props.knownTags}
             item={this.props.item}
             tagAdded={this.props.tagAdded}
             tagDeleted={this.props.tagDeleted}
-            updateAvailableTags={this.props.updateAvailableTags}
+            updateKnownTags={this.props.updateKnownTags}
           />
         </td>
         <td>

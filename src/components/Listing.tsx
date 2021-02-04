@@ -2,16 +2,16 @@ import React from "react";
 import { ListItem } from "../types/ListItem";
 import { ListingItem } from "../components/ListingItem";
 import { Tag } from "../types/Tag";
-import { TagResponse } from "../types/TagResponse";
+import { PromiseTag } from "../types/PromiseTag";
 
 export type ListingProps = {
   items: ListItem[];
-  tags: Tag[];
+  knownTags: Tag[];
   title: "Previously read links" | "Links to read";
   itemChanged: (listItem: ListItem) => void;
   tagAdded: (item: ListItem, tag: Tag) => void;
   tagDeleted: (item: ListItem, tag: Tag) => void;
-  updateAvailableTags: (title: string) => Promise<TagResponse>;
+  updateKnownTags: (title: string) => Promise<PromiseTag>;
 };
 export class Listing extends React.Component<ListingProps> {
   render(): JSX.Element {
@@ -32,11 +32,11 @@ export class Listing extends React.Component<ListingProps> {
               <ListingItem
                 item={item}
                 key={item.id}
-                availableTags={this.props.tags}
+                knownTags={this.props.knownTags}
                 itemChanged={this.props.itemChanged}
                 tagAdded={this.props.tagAdded}
                 tagDeleted={this.props.tagDeleted}
-                updateAvailableTags={this.props.updateAvailableTags}
+                updateKnownTags={this.props.updateKnownTags}
               />
             ))}
           </tbody>

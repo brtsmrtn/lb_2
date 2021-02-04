@@ -1,11 +1,18 @@
 export const maxLinkLength = 2083;
 export const COLORS = [
+  "#b3e5fc",
   "#ffcdd2",
-  "#d1c4e9",
-  "#b2ebf2",
   "#dcedc8",
-  "#ffecb3",
-  "#d7ccc8",
-  "#f8bbd0",
   "#c5cae9",
+  "#cfd8dc",
+  "#fff9c4",
+  "#d1c4e9",
+  "#ffccbc",
+  "#f0f4c3",
+  "#b2ebf2",
+  "#d7ccc8",
+  "#ffecb3",
+  "#f8bbd0",
+  "#b2dfdb",
+  "#f5f5f5",
 ];

@@ -32,25 +32,26 @@ const App = (): JSX.Element => {
     );
     setItems([...items]);
   };
-  const updateAvailableTags = (title: string) => {
-    const tagExists = tags.find((t) => t.title === title);
-    if (!tagExists) {
-      const tagId = tags.length + 1;
-      const chipColor = tagId > 11 ? 1 : tagId;
-      const returnTag: Tag = {
+  const updateKnownTags = (title: string) => {
+    const tagFound = knownTags.find((t) => t.title === title);
+    const returnErr = tagFound ? 0 : 1;
+    let returnTag = {} as Tag;
+    if (tagFound) {
+      returnTag = tagFound;
+    } else {
+      const tagId = knownTags.length + 1;
+      const tagColor =
+        COLORS[tagId >= COLORS.length ? COLORS.length - 1 : tagId - 1];
+      returnTag = {
         id: tagId.toString(),
         title: title,
-        color: COLORS[chipColor],
+        color: tagColor,
       };
-      setTags([...tags, returnTag]);
-      return new Promise<{ ok: number; item: Tag }>((res) => {
-        res({ ok: 1, item: returnTag });
-      });
-    } else {
-      return new Promise<{ ok: number; item: Tag }>((res) => {
-        res({ ok: 0, item: tagExists });
-      });
+      setKnownTags([...knownTags, returnTag]);
     }
+    return new Promise<{ ok: number; item: Tag }>((res) => {
+      res({ ok: returnErr, item: returnTag });
+    });
   };
   const addTag = (listItem: ListItem, tag: Tag) => {
     items.splice(
@@ -58,9 +59,7 @@ const App = (): JSX.Element => {
       1,
       {
         ...listItem,
-        tags: [...listItem.tags, tag].sort(
-          (a, b) => parseFloat(a.id) - parseFloat(b.id)
-        ),
+        tags: [...listItem.tags, tag],
       }
     );
     setItems([...items]);
@@ -81,7 +80,7 @@ const App = (): JSX.Element => {
   };
   const [url, setUrl] = useState("");
   const [items, setItems] = useState<ListItem[]>([]);
-  const [tags, setTags] = useState<Tag[]>([]);
+  const [knownTags, setKnownTags] = useState<Tag[]>([]);
   return (
     <div>
       <AddLink url={url.toLowerCase()} onChange={setUrl} />
@@ -92,19 +91,19 @@ const App = (): JSX.Element => {
           title="Links to read"
           items={items.filter((item) => item.alreadyRead === false)}
           itemChanged={changeItemStatus}
-          tags={tags}
+          knownTags={knownTags}
           tagAdded={addTag}
           tagDeleted={deleteTag}
-          updateAvailableTags={updateAvailableTags}
+          updateKnownTags={updateKnownTags}
         ></Listing>
         <Listing
           title="Previously read links"
           items={items.filter((item) => item.alreadyRead === true)}
           itemChanged={changeItemStatus}
-          tags={tags}
+          knownTags={knownTags}
           tagAdded={addTag}
           tagDeleted={deleteTag}
-          updateAvailableTags={updateAvailableTags}
+          updateKnownTags={updateKnownTags}
         ></Listing>
       </div>
     </div>

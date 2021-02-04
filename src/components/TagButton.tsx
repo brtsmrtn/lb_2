@@ -1,36 +1,41 @@
 import React from "react";
-import { Button } from "@material-ui/core";
-import TextField from "@material-ui/core/TextField";
-import Dialog from "@material-ui/core/Dialog";
-import DialogActions from "@material-ui/core/DialogActions";
-import DialogContent from "@material-ui/core/DialogContent";
-import DialogContentText from "@material-ui/core/DialogContentText";
-import DialogTitle from "@material-ui/core/DialogTitle";
 import { Tag } from "../types/Tag";
-import Autocomplete from "@material-ui/lab/Autocomplete";
 import { ListItem } from "../types/ListItem";
-import Chip from "@material-ui/core/Chip";
-import { TagResponse } from "../types/TagResponse";
+import TagList from "./TagList";
+import { errorTags } from "../functions/errorMessages";
+import {
+  Button,
+  TextField,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+} from "@material-ui/core";
+import Autocomplete from "@material-ui/lab/Autocomplete";
+import { PromiseTag } from "../types/PromiseTag";
 
 export type TagButtonProps = {
   item: ListItem;
-  availableTags: Tag[];
+  knownTags: Tag[];
   tagAdded: (item: ListItem, tag: Tag) => void;
   tagDeleted: (item: ListItem, tag: Tag) => void;
-  updateAvailableTags: (title: string) => Promise<TagResponse>;
+  updateKnownTags: (title: string) => Promise<PromiseTag>;
 };
 export class TagButton extends React.Component<
   TagButtonProps,
-  { dialogOpen: boolean; assignedTags: Tag[]; helperText: string }
+  { dialogOpen: boolean; tags: Tag[]; errorTag: string }
 > {
   constructor(props: TagButtonProps) {
     super(props);
     this.state = {
       dialogOpen: false,
-      assignedTags: props.item.tags,
-      helperText: "",
+      tags: props.item.tags,
+      errorTag: "",
     };
   }
+  isTagNew = function (tagTitle: string, tags: Tag[]): Tag | undefined {
+    return tags.find((t) => t.title === tagTitle);
+  };
   render(): JSX.Element {
     return (
       <div>
@@ -46,17 +51,15 @@ export class TagButton extends React.Component<
           onClose={() => this.setState({ dialogOpen: false })}
           aria-labelledby={"form-dialog-title"}
         >
-          <DialogTitle id={"form-dialog-title"}>Add tags</DialogTitle>
           <DialogContent>
             <DialogContentText>
-              Add new tag or pick one from the list.
+              Add new tag or pick any from the list.
             </DialogContentText>
             <Autocomplete
-              fullWidth
               multiple
               disableClearable
               id="tags-outlined"
-              options={this.props.availableTags}
+              options={this.props.knownTags}
               getOptionLabel={(option) => option.title}
               value={this.props.item.tags}
               filterSelectedOptions
@@ -64,72 +67,90 @@ export class TagButton extends React.Component<
               autoComplete
               clearOnBlur={false}
               onChange={(e, value, reason) => {
-                if (reason !== "remove-option") {
-                  const newTag = value.filter(
-                    (n) => !this.props.item.tags.includes(n)
+                const targetTag = value[value.length - 1];
+                if (reason === "select-option") {
+                  const tagAlreadyAssigned = this.isTagNew(
+                    targetTag.title,
+                    this.props.item.tags
                   );
-                  if (newTag) {
-                    this.props.tagAdded(this.props.item, newTag[0]);
+                  if (tagAlreadyAssigned) {
+                    this.setState({
+                      errorTag: errorTags.submit,
+                    });
+                  } else {
+                    this.props.tagAdded(this.props.item, targetTag);
+                    this.setState({ errorTag: errorTags.empty });
                   }
                 }
-                this.setState({ helperText: "" });
               }}
               renderInput={(params) => (
                 <TextField
                   {...params}
                   variant="outlined"
-                  label={this.state.helperText}
+                  label={this.state.errorTag}
                   autoFocus
                   onChange={(e) => {
-                    const tagTarget = e.target as HTMLTextAreaElement;
-                    if (tagTarget) {
-                      const tagExists = this.props.item.tags.find(
-                        (t) => t.title === tagTarget.value
+                    const targetTag = e.target as HTMLTextAreaElement;
+                    const targetTagTitle = targetTag.value;
+                    if (targetTagTitle) {
+                      const tagAlreadyAssigned = this.isTagNew(
+                        targetTagTitle,
+                        this.props.item.tags
                       );
-                      if (!tagExists && tagTarget.value) {
-                        this.setState({
-                          helperText: "Submit with 'Enter'",
-                        });
+                      if (tagAlreadyAssigned) {
+                        this.setState({ errorTag: errorTags.assigned });
                       } else {
-                        this.setState({ helperText: "" });
+                        this.setState({
+                          errorTag: errorTags.submit,
+                        });
                       }
+                    } else {
+                      this.setState({ errorTag: errorTags.empty });
                     }
                   }}
-                  onKeyPress={(e) => {
-                    const tagTarget = e.target as HTMLTextAreaElement;
-                    const tagExists = this.props.availableTags.find(
-                      (t) => t.title === tagTarget.value
-                    );
-                    if (e.key === "Enter" && tagTarget.value) {
-                      if (!tagExists) {
-                        this.props
-                          .updateAvailableTags(tagTarget.value)
-                          .then((res) => {
-                            if (res.ok === 1) {
-                              this.props.tagAdded(this.props.item, res.item);
-                            }
-                          });
+                  onKeyDown={(e) => {
+                    const targetTag = e.target as HTMLTextAreaElement;
+                    const targetTagTitle = targetTag.value;
+                    if (e.key === "Enter" && targetTagTitle) {
+                      const tagAlreadyAssigned = this.isTagNew(
+                        targetTagTitle,
+                        this.props.item.tags
+                      );
+                      const tagAlreadyKnown = this.isTagNew(
+                        targetTagTitle,
+                        this.props.knownTags
+                      );
+                      if (!tagAlreadyAssigned) {
+                        if (tagAlreadyKnown) {
+                          this.props.tagAdded(this.props.item, tagAlreadyKnown);
+                          this.setState({ errorTag: errorTags.empty });
+                        } else {
+                          this.props
+                            .updateKnownTags(targetTagTitle)
+                            .then((res) => {
+                              if (res.ok === 1) {
+                                this.props.tagAdded(this.props.item, res.item);
+                                this.setState({ errorTag: errorTags.empty });
+                              } else {
+                                this.setState({
+                                  errorTag: errorTags.wrong,
+                                });
+                              }
+                            });
+                        }
                       }
                     }
                   }}
                 />
               )}
-              renderTags={(value, getTagProps) =>
-                value.map((option, index) => (
-                  <Chip
-                    label={option.title}
-                    {...getTagProps({ index })}
-                    key={option.id}
-                    style={{
-                      backgroundColor: option.color,
-                      color: "#757575",
-                    }}
-                    onDelete={() =>
-                      this.props.tagDeleted(this.props.item, option)
-                    }
-                  />
-                ))
-              }
+              renderTags={() => (
+                <TagList
+                  editable={true}
+                  item={this.props.item}
+                  tagAdded={this.props.tagAdded}
+                  tagDeleted={this.props.tagDeleted}
+                />
+              )}
             />
           </DialogContent>
           <DialogActions>

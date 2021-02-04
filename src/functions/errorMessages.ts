@@ -11,9 +11,18 @@ export type ErrorMessageMessage =
   | "Beginning with http(s):// is a must."
   | "The link is too long."
   | undefined;
+export type ErrorTagState = "assigned" | "empty" | "submit" | "wrong";
+export type ErrorTagMessage =
+  | "Tag already assigned"
+  | ""
+  | "Submit with 'Enter'"
+  | "Something is wrong";
 
 type ErorrMessages = {
   [key in ErrorMessageState]: ErrorMessageMessage;
+};
+type ErorrTags = {
+  [key in ErrorTagState]: ErrorTagMessage;
 };
 
 export const errorMessages: ErorrMessages = {
@@ -22,4 +31,11 @@ export const errorMessages: ErorrMessages = {
   invalid: "That link still needs some sauce.",
   missing_prefix: "Beginning with http(s):// is a must.",
   too_long: "The link is too long.",
+};
+
+export const errorTags: ErorrTags = {
+  assigned: "Tag already assigned",
+  empty: "",
+  submit: "Submit with 'Enter'",
+  wrong: "Something is wrong",
 };
