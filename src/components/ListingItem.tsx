@@ -4,7 +4,6 @@ import { Button } from "@material-ui/core";
 import { TagButton } from "./TagButton";
 import { Tag } from "../types/Tag";
 import TagList from "./TagList";
-import { PromiseTag } from "../types/PromiseTag";
 
 type ListingItemProps = {
   item: ListItem;
@@ -12,42 +11,42 @@ type ListingItemProps = {
   itemChanged: (listItem: ListItem) => void;
   tagAdded: (item: ListItem, tag: Tag) => void;
   tagDeleted: (item: ListItem, tag: Tag) => void;
-  updateKnownTags: (title: string) => Promise<PromiseTag>;
+  updateKnownTags: (title: string) => Tag | undefined;
 };
 
-export class ListingItem extends React.Component<ListingItemProps> {
-  render(): JSX.Element {
-    return (
-      <tr>
-        <td>{this.props.item.url}</td>
-        <td>{this.props.item.date}</td>
-        <td>
-          <Button
-            variant="outlined"
-            color="primary"
-            onClick={() => this.props.itemChanged(this.props.item)}
-          >
-            {!!this.props.item.alreadyRead ? "Unread" : "Read"}
-          </Button>
-        </td>
-        <td>
-          <TagButton
-            knownTags={this.props.knownTags}
-            item={this.props.item}
-            tagAdded={this.props.tagAdded}
-            tagDeleted={this.props.tagDeleted}
-            updateKnownTags={this.props.updateKnownTags}
-          />
-        </td>
-        <td>
-          <TagList
-            editable={false}
-            item={this.props.item}
-            tagAdded={this.props.tagAdded}
-            tagDeleted={this.props.tagDeleted}
-          />
-        </td>
-      </tr>
-    );
-  }
-}
+export const ListingItem: (props: ListingItemProps) => JSX.Element = ({
+  item,
+  knownTags,
+  itemChanged,
+  tagAdded,
+  tagDeleted,
+  updateKnownTags,
+}: ListingItemProps) => {
+  return (
+    <tr>
+      <td>{item.url}</td>
+      <td>{item.date}</td>
+      <td>
+        <Button
+          variant="outlined"
+          color="primary"
+          onClick={() => itemChanged(item)}
+        >
+          {!!item.alreadyRead ? "Unread" : "Read"}
+        </Button>
+      </td>
+      <td>
+        <TagButton
+          knownTags={knownTags}
+          item={item}
+          tagAdded={tagAdded}
+          tagDeleted={tagDeleted}
+          updateKnownTags={updateKnownTags}
+        />
+      </td>
+      <td>
+        <TagList editable={false} item={item} tagDeleted={tagDeleted} />
+      </td>
+    </tr>
+  );
+};

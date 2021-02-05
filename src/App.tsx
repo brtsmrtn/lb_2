@@ -6,16 +6,16 @@ import { Listing } from "./components/Listing";
 import { ListItem } from "./types/ListItem";
 import "./App";
 import { Tag } from "./types/Tag";
-
 import { COLORS } from "./utils/constants";
 
 const App = (): JSX.Element => {
   const submitForm = () => {
     const currentDate = new Date();
+    const newItems = [...items];
     setItems([
-      ...items,
+      ...newItems,
       {
-        id: (items.length + 1).toString(),
+        id: (newItems.length + 1).toString(),
         url: url,
         date: currentDate.toLocaleString(),
         alreadyRead: false,
@@ -25,58 +25,57 @@ const App = (): JSX.Element => {
     setUrl("");
   };
   const changeItemStatus = (listItem: ListItem) => {
-    items.splice(
-      items.findIndex((it) => it.id === listItem.id),
+    const newItems = [...items];
+    const newListItem = { ...listItem, alreadyRead: !listItem.alreadyRead };
+    newItems.splice(
+      newItems.findIndex((it) => it.id === newListItem.id),
       1,
-      { ...listItem, alreadyRead: !listItem.alreadyRead }
+      newListItem
     );
-    setItems([...items]);
+    setItems([...newItems]);
   };
   const updateKnownTags = (title: string) => {
     const tagFound = knownTags.find((t) => t.title === title);
-    const returnErr = tagFound ? 0 : 1;
-    let returnTag = {} as Tag;
-    if (tagFound) {
-      returnTag = tagFound;
-    } else {
+    let newTag = undefined;
+    if (!tagFound) {
       const tagId = knownTags.length + 1;
       const tagColor =
         COLORS[tagId >= COLORS.length ? COLORS.length - 1 : tagId - 1];
-      returnTag = {
+      newTag = {
         id: tagId.toString(),
         title: title,
         color: tagColor,
       };
-      setKnownTags([...knownTags, returnTag]);
+      setKnownTags([...knownTags, newTag]);
     }
-    return new Promise<{ ok: number; item: Tag }>((res) => {
-      res({ ok: returnErr, item: returnTag });
-    });
+    return newTag;
   };
   const addTag = (listItem: ListItem, tag: Tag) => {
-    items.splice(
-      items.findIndex((it) => it.id === listItem.id),
+    const newItems = [...items];
+    const newListItem = {
+      ...listItem,
+      tags: [...listItem.tags, tag],
+    };
+    newItems.splice(
+      newItems.findIndex((it) => it.id === newListItem.id),
       1,
-      {
-        ...listItem,
-        tags: [...listItem.tags, tag],
-      }
+      newListItem
     );
-    setItems([...items]);
+    setItems([...newItems]);
   };
   const deleteTag = (listItem: ListItem, tagItem: Tag) => {
-    listItem.tags.splice(
-      listItem.tags.findIndex((li) => li.id === tagItem.id),
+    const newItems = [...items];
+    const newListItem = { ...listItem, tags: [...listItem.tags] };
+    newListItem.tags.splice(
+      newListItem.tags.findIndex((li) => li.id === tagItem.id),
       1
     );
-    items.splice(
-      items.findIndex((it) => it.id === listItem.id),
+    newItems.splice(
+      newItems.findIndex((it) => it.id === newListItem.id),
       1,
-      {
-        ...listItem,
-      }
+      newListItem
     );
-    setItems([...items]);
+    setItems([...newItems]);
   };
   const [url, setUrl] = useState("");
   const [items, setItems] = useState<ListItem[]>([]);
