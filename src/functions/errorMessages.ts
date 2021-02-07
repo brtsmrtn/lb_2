@@ -14,9 +14,9 @@ export type ErrorMessageMessage =
 export type ErrorTagState = "assigned" | "empty" | "submit" | "wrong";
 export type ErrorTagMessage =
   | "Tag already assigned"
-  | ""
   | "Submit with 'Enter'"
-  | "Something is wrong";
+  | "Something is wrong"
+  | undefined;
 
 type ErorrMessages = {
   [key in ErrorMessageState]: ErrorMessageMessage;
@@ -35,7 +35,7 @@ export const errorMessages: ErorrMessages = {
 
 export const errorTags: ErorrTags = {
   assigned: "Tag already assigned",
-  empty: "",
   submit: "Submit with 'Enter'",
   wrong: "Something is wrong",
+  empty: undefined,
 };

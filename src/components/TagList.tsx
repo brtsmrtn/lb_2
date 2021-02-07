@@ -7,29 +7,27 @@ export type TagListProps = {
   item: ListItem;
   tagDeleted: (item: ListItem, tag: Tag) => void;
 };
-export const TagList: (props: TagListProps) => JSX.Element = ({
+const TagList: (props: TagListProps) => JSX.Element = ({
   editable,
   item,
   tagDeleted,
-}: TagListProps) => {
-  return (
-    <div>
-      {item.tags.map((tag: Tag, index: number) => (
-        <Chip
-          key={tag.id}
-          label={tag.title}
-          style={{
-            backgroundColor: tag.color,
-          }}
-          {...{
-            "data-tag-index": index,
-          }}
-          {...(editable && {
-            onDelete: () => tagDeleted(item, tag),
-          })}
-        />
-      ))}
-    </div>
-  );
-};
+}: TagListProps) => (
+  <div>
+    {item.tags.map((tag: Tag, index: number) => (
+      <Chip
+        key={tag.id}
+        label={tag.title}
+        style={{
+          backgroundColor: tag.color,
+        }}
+        {...{
+          "data-tag-index": index,
+        }}
+        {...(editable && {
+          onDelete: () => tagDeleted(item, tag),
+        })}
+      />
+    ))}
+  </div>
+);
 export default TagList;

@@ -21,32 +21,30 @@ export const ListingItem: (props: ListingItemProps) => JSX.Element = ({
   tagAdded,
   tagDeleted,
   updateKnownTags,
-}: ListingItemProps) => {
-  return (
-    <tr>
-      <td>{item.url}</td>
-      <td>{item.date}</td>
-      <td>
-        <Button
-          variant="outlined"
-          color="primary"
-          onClick={() => itemChanged(item)}
-        >
-          {!!item.alreadyRead ? "Unread" : "Read"}
-        </Button>
-      </td>
-      <td>
-        <TagButton
-          knownTags={knownTags}
-          item={item}
-          tagAdded={tagAdded}
-          tagDeleted={tagDeleted}
-          updateKnownTags={updateKnownTags}
-        />
-      </td>
-      <td>
-        <TagList editable={false} item={item} tagDeleted={tagDeleted} />
-      </td>
-    </tr>
-  );
-};
+}: ListingItemProps) => (
+  <tr>
+    <td>{item.url}</td>
+    <td>{item.date}</td>
+    <td>
+      <Button
+        variant="outlined"
+        color="primary"
+        onClick={() => itemChanged(item)}
+      >
+        {!!item.alreadyRead ? "Unread" : "Read"}
+      </Button>
+    </td>
+    <td>
+      <TagButton
+        knownTags={knownTags}
+        item={item}
+        tagAdded={tagAdded}
+        tagDeleted={tagDeleted}
+        updateKnownTags={updateKnownTags}
+      />
+    </td>
+    <td>
+      <TagList editable={false} item={item} tagDeleted={tagDeleted} />
+    </td>
+  </tr>
+);

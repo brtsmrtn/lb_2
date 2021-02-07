@@ -20,33 +20,31 @@ export const Listing: (props: ListingProps) => JSX.Element = ({
   tagAdded,
   tagDeleted,
   updateKnownTags,
-}: ListingProps) => {
-  return (
-    <div>
-      <h2>
-        {title} ({items.length})
-      </h2>
-      <table>
-        <thead>
-          <tr>
-            <th>URL</th>
-            <th>Date</th>
-          </tr>
-        </thead>
-        <tbody>
-          {items.map((item) => (
-            <ListingItem
-              item={item}
-              key={item.id}
-              knownTags={knownTags}
-              itemChanged={itemChanged}
-              tagAdded={tagAdded}
-              tagDeleted={tagDeleted}
-              updateKnownTags={updateKnownTags}
-            />
-          ))}
-        </tbody>
-      </table>
-    </div>
-  );
-};
+}: ListingProps) => (
+  <div>
+    <h2>
+      {title} ({items.length})
+    </h2>
+    <table>
+      <thead>
+        <tr>
+          <th>URL</th>
+          <th>Date</th>
+        </tr>
+      </thead>
+      <tbody>
+        {items.map((item) => (
+          <ListingItem
+            item={item}
+            key={item.id}
+            knownTags={knownTags}
+            itemChanged={itemChanged}
+            tagAdded={tagAdded}
+            tagDeleted={tagDeleted}
+            updateKnownTags={updateKnownTags}
+          />
+        ))}
+      </tbody>
+    </table>
+  </div>
+);

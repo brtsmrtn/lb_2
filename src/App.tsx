@@ -28,14 +28,14 @@ const App = (): JSX.Element => {
     const newItems = [...items];
     const newListItem = { ...listItem, alreadyRead: !listItem.alreadyRead };
     newItems.splice(
-      newItems.findIndex((it) => it.id === newListItem.id),
+      newItems.findIndex((item) => item.id === newListItem.id),
       1,
       newListItem
     );
     setItems([...newItems]);
   };
-  const updateKnownTags = (title: string) => {
-    const tagFound = knownTags.find((t) => t.title === title);
+  const updateKnownTags = (tagTitle: string) => {
+    const tagFound = knownTags.find((tag) => tag.title === tagTitle);
     let newTag = undefined;
     if (!tagFound) {
       const tagId = knownTags.length + 1;
@@ -43,35 +43,35 @@ const App = (): JSX.Element => {
         COLORS[tagId >= COLORS.length ? COLORS.length - 1 : tagId - 1];
       newTag = {
         id: tagId.toString(),
-        title: title,
+        title: tagTitle,
         color: tagColor,
       };
       setKnownTags([...knownTags, newTag]);
     }
     return newTag;
   };
-  const addTag = (listItem: ListItem, tag: Tag) => {
+  const assignTagToItem = (listItem: ListItem, tag: Tag) => {
     const newItems = [...items];
     const newListItem = {
       ...listItem,
       tags: [...listItem.tags, tag],
     };
     newItems.splice(
-      newItems.findIndex((it) => it.id === newListItem.id),
+      newItems.findIndex((item) => item.id === newListItem.id),
       1,
       newListItem
     );
     setItems([...newItems]);
   };
-  const deleteTag = (listItem: ListItem, tagItem: Tag) => {
+  const unassignTagFromItem = (listItem: ListItem, tagItem: Tag) => {
     const newItems = [...items];
     const newListItem = { ...listItem, tags: [...listItem.tags] };
     newListItem.tags.splice(
-      newListItem.tags.findIndex((li) => li.id === tagItem.id),
+      newListItem.tags.findIndex((tag) => tag.id === tagItem.id),
       1
     );
     newItems.splice(
-      newItems.findIndex((it) => it.id === newListItem.id),
+      newItems.findIndex((item) => item.id === newListItem.id),
       1,
       newListItem
     );
@@ -82,7 +82,7 @@ const App = (): JSX.Element => {
   const [knownTags, setKnownTags] = useState<Tag[]>([]);
   return (
     <div>
-      <AddLink url={url.toLowerCase()} onChange={setUrl} />
+      <AddLink url={url} onChange={setUrl} />
       <SubmitLink url={url} items={items} onClick={submitForm} />
       <Message url={url} items={items}></Message>
       <div>
@@ -91,8 +91,8 @@ const App = (): JSX.Element => {
           items={items.filter((item) => item.alreadyRead === false)}
           itemChanged={changeItemStatus}
           knownTags={knownTags}
-          tagAdded={addTag}
-          tagDeleted={deleteTag}
+          tagAdded={assignTagToItem}
+          tagDeleted={unassignTagFromItem}
           updateKnownTags={updateKnownTags}
         ></Listing>
         <Listing
@@ -100,8 +100,8 @@ const App = (): JSX.Element => {
           items={items.filter((item) => item.alreadyRead === true)}
           itemChanged={changeItemStatus}
           knownTags={knownTags}
-          tagAdded={addTag}
-          tagDeleted={deleteTag}
+          tagAdded={assignTagToItem}
+          tagDeleted={unassignTagFromItem}
           updateKnownTags={updateKnownTags}
         ></Listing>
       </div>

@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Tag } from "../types/Tag";
 import { ListItem } from "../types/ListItem";
 import TagList from "./TagList";
-import { errorTags } from "../functions/errorMessages";
+import { errorTags, ErrorTagMessage } from "../functions/errorMessages";
 import {
   Button,
   TextField,
@@ -28,20 +28,15 @@ export const TagButton: (props: TagButtonProps) => JSX.Element = ({
   updateKnownTags,
 }: TagButtonProps) => {
   const [dialogOpen, setDialogOpen] = useState(false);
-  const [errorTag, setErrorTag] = useState("");
-  const isTagNew = function (tagTitle: string, tags: Tag[]): Tag | undefined {
-    return tags.find((t) => t.title === tagTitle);
-  };
-  const onChangeAutocomplete = (
-    value: Tag[],
-    reason: string,
-    item: ListItem
-  ) => {
-    const targetTag = value[value.length - 1];
+  const [errorTag, setErrorTag] = useState<ErrorTagMessage>(undefined);
+  const isTagNew = (tagTitle: string, tags: Tag[]) =>
+    tags.find((tag) => tag.title === tagTitle);
+  const onChangeAutocomplete = (tag: Tag[], reason: string, item: ListItem) => {
+    const targetTag = tag[tag.length - 1];
     if (reason === "select-option") {
       const tagAlreadyAssigned = isTagNew(targetTag.title, item.tags);
       if (tagAlreadyAssigned) {
-        () => setErrorTag(errorTags.submit);
+        setErrorTag(errorTags.submit);
       } else {
         tagAdded(item, targetTag);
         setErrorTag(errorTags.empty);
@@ -53,9 +48,9 @@ export const TagButton: (props: TagButtonProps) => JSX.Element = ({
     item: ListItem
   ) => {
     const targetTag = e.target as HTMLTextAreaElement;
-    const targetTagTitle = targetTag.value;
-    if (targetTagTitle) {
-      const tagAlreadyAssigned = isTagNew(targetTagTitle, item.tags);
+    const tagTitle = targetTag.value;
+    if (tagTitle) {
+      const tagAlreadyAssigned = isTagNew(tagTitle, item.tags);
       if (tagAlreadyAssigned) {
         setErrorTag(errorTags.assigned);
       } else {
@@ -116,10 +111,10 @@ export const TagButton: (props: TagButtonProps) => JSX.Element = ({
             style={{
               fontStyle: "italic",
               fontSize: 12,
-              marginTop: "20px",
+              height: "20px",
             }}
           >
-            {errorTag ? errorTag : <br />}
+            {errorTag}
           </DialogContentText>
           <Autocomplete
             style={{

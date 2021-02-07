@@ -8,17 +8,15 @@ type LinkProps = UrlType & {
 export const AddLink: (props: LinkProps) => JSX.Element = ({
   onChange,
   url,
-}: LinkProps) => {
-  return (
-    <input
-      type="text"
-      autoComplete="off"
-      spellCheck="false"
-      autoCorrect="off"
-      required
-      placeholder="https://medium.com/swlh/sexism-in-tech-an-inconvenient-truth-26df0329e39"
-      value={url}
-      onChange={(event) => onChange(event.currentTarget.value)}
-    />
-  );
-};
+}: LinkProps) => (
+  <input
+    type="text"
+    autoComplete="off"
+    spellCheck="false"
+    autoCorrect="off"
+    required
+    placeholder="https://medium.com/swlh/sexism-in-tech-an-inconvenient-truth-26df0329e39"
+    value={url}
+    onChange={(event) => onChange(event.currentTarget.value.toLowerCase())}
+  />
+);
