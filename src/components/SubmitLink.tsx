@@ -4,6 +4,7 @@ import { isLinkValid } from "../functions/isLinkValid";
 import { ListItem } from "../types/ListItem";
 import { UrlType } from "../types/Url";
 import { Button } from "@material-ui/core";
+import { maxLinkLength } from "../utils/constants";
 type SubmitProps = UrlType & {
   items: ListItem[];
   onClick: (
@@ -11,21 +12,21 @@ type SubmitProps = UrlType & {
   ) => void | undefined;
 };
 
-export class SubmitLink extends React.Component<SubmitProps> {
-  render(): JSX.Element {
-    return (
-      <Button
-        variant="outlined"
-        color="primary"
-        disabled={
-          !isLinkValid(this.props.url) ||
-          isLinkDuplicate(this.props.url, this.props.items) ||
-          this.props.url.length >= 2083
-        }
-        onClick={this.props.onClick}
-      >
-        Add link
-      </Button>
-    );
-  }
-}
+export const SubmitLink: (props: SubmitProps) => JSX.Element = ({
+  items,
+  onClick,
+  url,
+}: SubmitProps) => (
+  <Button
+    variant="outlined"
+    color="primary"
+    disabled={
+      !isLinkValid(url) ||
+      isLinkDuplicate(url, items) ||
+      url.length >= maxLinkLength
+    }
+    onClick={onClick}
+  >
+    Add link
+  </Button>
+);
