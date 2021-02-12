@@ -10,14 +10,14 @@ export const scenariosToBeTested: TestScenario[] = [
     "https://www.dd.cz",
     [
       {
-        id: "1",
+        id: 1,
         url: "https://www.dd.cz",
         date: "14. 1. 2021 17:40:45",
         alreadyRead: true,
         tags: [],
       },
       {
-        id: "2",
+        id: 2,
         url: "https://www.ee.cz",
         date: "14. 1. 2021 17:43:57",
         alreadyRead: true,
@@ -31,14 +31,14 @@ export const scenariosToBeTested: TestScenario[] = [
     "https://www.ff.cz",
     [
       {
-        id: "1",
+        id: 1,
         url: "https://www.dd.cz",
         date: "14. 1. 2021 17:40:45",
         alreadyRead: true,
         tags: [],
       },
       {
-        id: "2",
+        id: 2,
         url: "https://www.ee.cz",
         date: "14. 1. 2021 17:43:57",
         alreadyRead: true,
@@ -52,14 +52,14 @@ export const scenariosToBeTested: TestScenario[] = [
     "",
     [
       {
-        id: "1",
+        id: 1,
         url: "https://www.dd.cz",
         date: "14. 1. 2021 17:40:45",
         alreadyRead: true,
         tags: [],
       },
       {
-        id: "2",
+        id: 2,
         url: "https://www.ee.cz",
         date: "14. 1. 2021 17:43:57",
         alreadyRead: true,
@@ -73,14 +73,14 @@ export const scenariosToBeTested: TestScenario[] = [
     "loc",
     [
       {
-        id: "1",
+        id: 1,
         url: "https://www.dd.cz",
         date: "14. 1. 2021 17:40:45",
         alreadyRead: true,
         tags: [],
       },
       {
-        id: "2",
+        id: 2,
         url: "https://www.ee.cz",
         date: "14. 1. 2021 17:43:57",
         alreadyRead: true,
@@ -94,14 +94,14 @@ export const scenariosToBeTested: TestScenario[] = [
     "http://localhost:3000/",
     [
       {
-        id: "1",
+        id: 1,
         url: "https://www.dd.cz",
         date: "14. 1. 2021 17:40:45",
         alreadyRead: true,
         tags: [],
       },
       {
-        id: "2",
+        id: 2,
         url: "https://www.ee.cz",
         date: "14. 1. 2021 17:43:57",
         alreadyRead: true,

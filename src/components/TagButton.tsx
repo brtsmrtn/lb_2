@@ -1,8 +1,10 @@
 import React, { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { Tag } from "../types/Tag";
 import { ListItem } from "../types/ListItem";
 import TagList from "./TagList";
 import { errorTags, ErrorTagMessage } from "../functions/errorMessages";
+import { updateKnownTags } from "../features/tagList/tagsSlice";
 import {
   Button,
   TextField,
@@ -12,24 +14,25 @@ import {
   DialogContentText,
 } from "@material-ui/core";
 import Autocomplete from "@material-ui/lab/Autocomplete";
+import { RootState } from "../app/rootReducer";
 
 export type TagButtonProps = {
   item: ListItem;
-  knownTags: Tag[];
   tagAdded: (item: ListItem, tag: Tag) => void;
   tagDeleted: (item: ListItem, tag: Tag) => void;
-  updateKnownTags: (title: string) => Tag | undefined;
+  //updateKnownTags: (title: string) => Tag | undefined;
 };
 export const TagButton: (props: TagButtonProps) => JSX.Element = ({
   item,
-  knownTags,
   tagAdded,
   tagDeleted,
-  updateKnownTags,
-}: TagButtonProps) => {
+}: // updateKnownTags,
+TagButtonProps) => {
+  const dispatch = useDispatch();
+  const knownTags = useSelector((state: RootState) => state.knownTags);
   const [dialogOpen, setDialogOpen] = useState(false);
   const [errorTag, setErrorTag] = useState<ErrorTagMessage>(undefined);
-  const isTagNew = (tagTitle: string, tags: Tag[]) =>
+  const isTagNew = (tagTitle: string | null, tags: Tag[]) =>
     tags.find((tag) => tag.title === tagTitle);
   const onChangeAutocomplete = (tag: Tag[], reason: string, item: ListItem) => {
     const targetTag = tag[tag.length - 1];
@@ -74,13 +77,7 @@ export const TagButton: (props: TagButtonProps) => JSX.Element = ({
           tagAdded(item, tagAlreadyKnown);
           setErrorTag(errorTags.empty);
         } else {
-          const tagIsNew = updateKnownTags(targetTagTitle);
-          if (tagIsNew) {
-            tagAdded(item, tagIsNew);
-            setErrorTag(errorTags.empty);
-          } else {
-            setErrorTag(errorTags.wrong);
-          }
+          dispatch(updateKnownTags({ item, targetTagTitle }));
         }
       }
     }
@@ -121,7 +118,8 @@ export const TagButton: (props: TagButtonProps) => JSX.Element = ({
               marginBottom: "120px",
             }}
             options={knownTags}
-            getOptionLabel={(option) => option.title}
+            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+            getOptionLabel={(option) => option.title!}
             value={item.tags}
             clearOnBlur={false}
             multiple

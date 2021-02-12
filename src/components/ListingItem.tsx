@@ -7,20 +7,17 @@ import TagList from "./TagList";
 
 type ListingItemProps = {
   item: ListItem;
-  knownTags: Tag[];
   itemChanged: (listItem: ListItem) => void;
   tagAdded: (item: ListItem, tag: Tag) => void;
   tagDeleted: (item: ListItem, tag: Tag) => void;
-  updateKnownTags: (title: string) => Tag | undefined;
+  // updateKnownTags: (title: string) => Tag | undefined;
 };
 
 export const ListingItem: (props: ListingItemProps) => JSX.Element = ({
   item,
-  knownTags,
   itemChanged,
   tagAdded,
   tagDeleted,
-  updateKnownTags,
 }: ListingItemProps) => (
   <tr>
     <td>{item.url}</td>
@@ -35,13 +32,7 @@ export const ListingItem: (props: ListingItemProps) => JSX.Element = ({
       </Button>
     </td>
     <td>
-      <TagButton
-        knownTags={knownTags}
-        item={item}
-        tagAdded={tagAdded}
-        tagDeleted={tagDeleted}
-        updateKnownTags={updateKnownTags}
-      />
+      <TagButton item={item} tagAdded={tagAdded} tagDeleted={tagDeleted} />
     </td>
     <td>
       <TagList editable={false} item={item} tagDeleted={tagDeleted} />
