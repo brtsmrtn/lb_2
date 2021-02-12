@@ -1,25 +1,22 @@
-import React from "react";
+import React, { Dispatch } from "react";
 import { ListItem } from "../types/ListItem";
 import { ListingItem } from "../components/ListingItem";
 import { Tag } from "../types/Tag";
 
 export type ListingProps = {
   items: ListItem[];
-  knownTags: Tag[];
   title: "Previously read links" | "Links to read";
   itemChanged: (listItem: ListItem) => void;
   tagAdded: (item: ListItem, tag: Tag) => void;
   tagDeleted: (item: ListItem, tag: Tag) => void;
-  updateKnownTags: (title: string) => Tag | undefined;
+  // updateKnownTags: (title: string) => Tag | undefined;
 };
 export const Listing: (props: ListingProps) => JSX.Element = ({
   items,
-  knownTags,
   title,
   itemChanged,
   tagAdded,
   tagDeleted,
-  updateKnownTags,
 }: ListingProps) => (
   <div>
     <h2>
@@ -37,11 +34,9 @@ export const Listing: (props: ListingProps) => JSX.Element = ({
           <ListingItem
             item={item}
             key={item.id}
-            knownTags={knownTags}
             itemChanged={itemChanged}
             tagAdded={tagAdded}
             tagDeleted={tagDeleted}
-            updateKnownTags={updateKnownTags}
           />
         ))}
       </tbody>

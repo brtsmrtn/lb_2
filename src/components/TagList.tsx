@@ -11,23 +11,26 @@ const TagList: (props: TagListProps) => JSX.Element = ({
   editable,
   item,
   tagDeleted,
-}: TagListProps) => (
-  <div>
-    {item.tags.map((tag: Tag, index: number) => (
-      <Chip
-        key={tag.id}
-        label={tag.title}
-        style={{
-          backgroundColor: tag.color,
-        }}
-        {...{
-          "data-tag-index": index,
-        }}
-        {...(editable && {
-          onDelete: () => tagDeleted(item, tag),
-        })}
-      />
-    ))}
-  </div>
-);
+}: TagListProps) => {
+  return (
+    <div>
+      {item.tags.map((tag: Tag, index: number) => (
+        <Chip
+          key={tag.id}
+          label={tag.title}
+          style={{
+            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+            backgroundColor: tag.color!,
+          }}
+          {...{
+            "data-tag-index": index,
+          }}
+          {...(editable && {
+            onDelete: () => tagDeleted(item, tag),
+          })}
+        />
+      ))}
+    </div>
+  );
+};
 export default TagList;

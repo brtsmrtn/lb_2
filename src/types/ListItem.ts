@@ -1,6 +1,6 @@
 import { Tag } from "./Tag";
 export type ListItem = {
-  id: string;
+  id: number;
   url: string;
   date: string;
   alreadyRead: boolean;
