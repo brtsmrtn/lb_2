@@ -1,22 +1,23 @@
 import React from "react";
-import { UrlType } from "../types/Url";
+import { useDispatch, useSelector } from "react-redux";
+import { setUrl } from "../features/urlInput";
+import { ApplicationState } from "../app/store";
 
-type LinkProps = UrlType & {
-  onChange: (event: string) => void;
+export const AddLink: () => JSX.Element = () => {
+  const dispatch = useDispatch();
+  const urlInput = useSelector((state: ApplicationState) => state.urlInput);
+  return (
+    <input
+      type="text"
+      autoComplete="off"
+      spellCheck="false"
+      autoCorrect="off"
+      required
+      value={urlInput}
+      placeholder="https://medium.com/swlh/sexism-in-tech-an-inconvenient-truth-26df0329e39"
+      onChange={(event) =>
+        dispatch(setUrl(event.currentTarget.value.toLowerCase()))
+      }
+    />
+  );
 };
-
-export const AddLink: (props: LinkProps) => JSX.Element = ({
-  onChange,
-  url,
-}: LinkProps) => (
-  <input
-    type="text"
-    autoComplete="off"
-    spellCheck="false"
-    autoCorrect="off"
-    required
-    placeholder="https://medium.com/swlh/sexism-in-tech-an-inconvenient-truth-26df0329e39"
-    value={url}
-    onChange={(event) => onChange(event.currentTarget.value.toLowerCase())}
-  />
-);

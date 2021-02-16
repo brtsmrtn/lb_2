@@ -14,7 +14,7 @@ import {
   DialogContent,
   DialogContentText,
 } from "@material-ui/core";
-import { updateKnownTags } from "../features/tags";
+import { addKnownTag } from "../features/tags";
 import { assignTagToItem } from "../features/items";
 
 export type TagButtonProps = {
@@ -24,7 +24,9 @@ export const TagButton: (props: TagButtonProps) => JSX.Element = ({
   item,
 }: TagButtonProps) => {
   const dispatch = useDispatch();
-  const knownTags = useSelector((state: ApplicationState) => state.knownTags);
+  const knownTags = useSelector(
+    (state: ApplicationState) => state.knownTags
+  ).filter((t) => t.id !== "");
   const [dialogOpen, setDialogOpen] = useState(false);
   const [errorTag, setErrorTag] = useState<ErrorTagMessage>(undefined);
   const isTagNew = (tagTitle: string, tags: Tag[]) =>
@@ -72,14 +74,10 @@ export const TagButton: (props: TagButtonProps) => JSX.Element = ({
           dispatch(assignTagToItem(tagAlreadyKnown, item));
           setErrorTag(errorTags.empty);
         } else {
-          dispatch(updateKnownTags(tagTitle));
-          // const createdTag = knownTags.find((tag) => tag.title === tagTitle);
-          // console.log(createdTag);
-          // if (createdTag) {
-          //   setErrorTag(errorTags.empty);
-          // } else {
-          //   setErrorTag(errorTags.wrong);
-          // }
+          const updateKnownTagsAction = addKnownTag(tagTitle);
+          dispatch(updateKnownTagsAction);
+          dispatch(assignTagToItem(updateKnownTagsAction.tag, item));
+          setErrorTag(errorTags.empty);
         }
       }
     }
@@ -119,7 +117,7 @@ export const TagButton: (props: TagButtonProps) => JSX.Element = ({
             style={{
               marginBottom: "120px",
             }}
-            options={knownTags}
+            options={knownTags.filter((tag) => tag.id !== "")}
             getOptionLabel={(option) => option.title}
             value={item.tags}
             clearOnBlur={false}
@@ -129,9 +127,11 @@ export const TagButton: (props: TagButtonProps) => JSX.Element = ({
             filterSelectedOptions
             selectOnFocus
             autoComplete
-            onChange={(_, value, reason) =>
-              onChangeAutocomplete(value, reason, item)
-            }
+            onChange={(_, value: Tag[] | undefined, reason) => {
+              if (value) {
+                onChangeAutocomplete(value, reason, item);
+              }
+            }}
             ListboxProps={{
               style: {
                 maxHeight: "100px",

@@ -1,5 +1,5 @@
 import { scenariosToBeTested } from "./scenariosToBeTested";
-import { errorMessageGenerator } from "../functions/errorMessageGenerator";
+import { errorMessageGenerator } from "./errorMessageGenerator";
 
 test.each(scenariosToBeTested)(
   "scenario %s should go through",

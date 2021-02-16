@@ -1,18 +1,20 @@
 import { configureStore } from "@reduxjs/toolkit";
 import { ListItem } from "../types/ListItem";
 import { Tag } from "../types/Tag";
+let itemsCounter = 0;
 
 export const ADD_NEW_ITEM = "ADD_NEW_ITEM";
-export type AddNewItemActionType = {
+export type AddNewItemAction = {
   type: typeof ADD_NEW_ITEM;
-  payload: ListItem;
+  listItem: ListItem;
 };
-export const addNewItem: (url: string) => AddNewItemActionType = (url) => {
+export const addNewItem: (url: string) => AddNewItemAction = (url) => {
+  itemsCounter++;
   return {
     type: ADD_NEW_ITEM,
-    payload: {
-      id: (ItemsStore.getState().length + 1).toString(),
-      url: url,
+    listItem: {
+      id: itemsCounter.toString(),
+      url,
       date: new Date().getTime().toString(),
       alreadyRead: false,
       tags: [],
@@ -21,62 +23,68 @@ export const addNewItem: (url: string) => AddNewItemActionType = (url) => {
 };
 
 export const ASSIGN_TAG_TO_ITEM = "ASSIGN_TAG_TO_ITEM";
-export type AssignTagToItemActionType = {
+export type AssignTagToItemAction = {
   type: typeof ASSIGN_TAG_TO_ITEM;
-  payload: ListItem;
+  item: ListItem;
+  tag: Tag;
 };
 export const assignTagToItem: (
   tag: Tag,
   item: ListItem
-) => AssignTagToItemActionType = (tag, item) => {
+) => AssignTagToItemAction = (tag, item) => {
   return {
     type: ASSIGN_TAG_TO_ITEM,
-    payload: {
-      ...item,
-      tags: [...item.tags, tag],
-    },
+    item,
+    tag,
   };
 };
 
 export const UNASSIGN_TAG_FROM_ITEM = "UNASSIGN_TAG_FROM_ITEM";
-export type UnassignTagFromItemActionType = {
+export type UnassignTagFromItemAction = {
   type: typeof UNASSIGN_TAG_FROM_ITEM;
-  payload: { tag: Tag; item: ListItem };
+  tag: Tag;
+  item: ListItem;
 };
 export const unassignTagFromItem: (
   tag: Tag,
   item: ListItem
-) => UnassignTagFromItemActionType = (tag, item) => {
+) => UnassignTagFromItemAction = (tag, item) => {
   return {
     type: UNASSIGN_TAG_FROM_ITEM,
-    payload: { tag: tag, item: item },
+    tag,
+    item,
   };
 };
 
-export const CHANGE_ITEM_STATUS = "CHANGE_ITEM_STATUS";
-export type ChangeItemStatusActionType = {
-  type: typeof CHANGE_ITEM_STATUS;
-  payload: ListItem;
+export const TOGGLE_ITEM_STATUS = "TOGGLE_ITEM_STATUS";
+export type ToggleItemStatusAction = {
+  type: typeof TOGGLE_ITEM_STATUS;
+  item: ListItem;
 };
-export const changeItemStatus: (
-  item: ListItem
-) => ChangeItemStatusActionType = (item) => {
+export const toggleItemStatus: (item: ListItem) => ToggleItemStatusAction = (
+  item
+) => {
   return {
-    type: CHANGE_ITEM_STATUS,
-    payload: item,
+    type: TOGGLE_ITEM_STATUS,
+    item,
   };
 };
 
 export type ItemsState = ListItem[];
-const initialItemsState: ItemsState = [
-  { id: "1", url: "url", date: "ted", alreadyRead: false, tags: [] },
-];
+// const initialItem = {
+//   id: "1",
+//   url: "url",
+//   date: "ted",
+//   alreadyRead: false,
+//   tags: [],
+// };
+export const initialItemsState: ItemsState = [];
 
 export type ItemsActions =
-  | AssignTagToItemActionType
-  | AddNewItemActionType
-  | UnassignTagFromItemActionType
-  | ChangeItemStatusActionType;
+  | AssignTagToItemAction
+  | AddNewItemAction
+  | UnassignTagFromItemAction
+  | ToggleItemStatusAction;
 
 export function itemsReducer(
   state = initialItemsState,
@@ -84,47 +92,56 @@ export function itemsReducer(
 ): ItemsState {
   switch (action.type) {
     case ADD_NEW_ITEM: {
-      return [...state, action.payload];
+      return [...state, action.listItem];
     }
-    case ASSIGN_TAG_TO_ITEM: {
-      return state.map((item) => {
-        if (item.id === action.payload.id) {
-          return Object.assign({}, item, {
-            tags: action.payload.tags,
-          });
-        }
-        return item;
-      });
-    }
+    case ASSIGN_TAG_TO_ITEM:
+      const indexOfItem = state.findIndex((item) => item.id === action.item.id);
+      if (
+        action.item.tags.filter((tag) => tag.title === action.tag.title).length
+      ) {
+        return [...state];
+      } else {
+        return [
+          ...state.slice(0, indexOfItem),
+          {
+            ...action.item,
+            tags: [...action.item.tags, action.tag],
+          },
+          ...state.slice(indexOfItem + 1),
+        ];
+      }
+
     case UNASSIGN_TAG_FROM_ITEM: {
-      const newItems = [...state];
-      const newListItem = {
-        ...action.payload.item,
-        tags: [...action.payload.item.tags],
-      };
-      newListItem.tags.splice(
-        newListItem.tags.findIndex((tag) => tag.id === action.payload.tag.id),
-        1
-      );
-      newItems.splice(
-        newItems.findIndex((item) => item.id === newListItem.id),
-        1,
-        newListItem
-      );
-      return newItems;
+      if (
+        action.item.tags.filter((tag) => tag.title === action.tag.title).length
+      ) {
+        const indexOfItem = state.findIndex(
+          (item) => item.id === action.item.id
+        );
+        const indexOfTag = action.item.tags.findIndex(
+          (tag) => tag.id === action.tag.id
+        );
+        return [
+          ...state.slice(0, indexOfItem),
+          {
+            ...action.item,
+            tags: [
+              ...action.item.tags.slice(0, indexOfTag),
+              ...action.item.tags.slice(indexOfTag + 1),
+            ],
+          },
+          ...state.slice(indexOfItem + 1),
+        ];
+      } else {
+        return [...state];
+      }
     }
-    case CHANGE_ITEM_STATUS: {
-      const newItems = [...state];
-      const newListItem = {
-        ...action.payload,
-        alreadyRead: !action.payload.alreadyRead,
-      };
-      newItems.splice(
-        newItems.findIndex((item) => item.id === action.payload.id),
-        1,
-        newListItem
-      );
-      return newItems;
+    case TOGGLE_ITEM_STATUS: {
+      return [
+        Object.assign({}, action.item, {
+          alreadyRead: !action.item.alreadyRead,
+        }),
+      ];
     }
     default:
       return state;

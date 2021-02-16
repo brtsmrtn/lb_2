@@ -1,25 +1,31 @@
 import { configureStore } from "@reduxjs/toolkit";
 import { Tag } from "../types/Tag";
 import { COLORS } from "../utils/constants";
-
+let tagsCounter = 0;
 export const ADD_KNOWN_TAG = "ADD_KNOWN_TAG";
-export type UpdateKnownTagsActionType = {
+export type AddKnownTagAction = {
   type: typeof ADD_KNOWN_TAG;
-  payload: string;
+  tag: Tag;
 };
-export const updateKnownTags: (
-  tagTitle: string
-) => UpdateKnownTagsActionType = (tagTitle) => {
+export const addKnownTag: (title: string) => AddKnownTagAction = (title) => {
+  tagsCounter++;
   return {
     type: ADD_KNOWN_TAG,
-    payload: tagTitle,
+    tag: {
+      id: tagsCounter.toString(),
+      title,
+      color:
+        COLORS[
+          tagsCounter >= COLORS.length ? COLORS.length - 1 : tagsCounter - 1
+        ],
+    },
   };
 };
 
 export type KnownTagsState = Tag[];
 const initialKnownTagsState: KnownTagsState = [];
 
-export type KnownTagsActions = UpdateKnownTagsActionType;
+export type KnownTagsActions = AddKnownTagAction;
 
 export function knownTagsReducer(
   state = initialKnownTagsState,
@@ -27,15 +33,7 @@ export function knownTagsReducer(
 ): KnownTagsState {
   switch (action.type) {
     case ADD_KNOWN_TAG: {
-      const tagId = state.length + 1;
-      const tagColor =
-        COLORS[tagId >= COLORS.length ? COLORS.length - 1 : tagId - 1];
-      const newTag = {
-        id: tagId.toString(),
-        title: action.payload,
-        color: tagColor,
-      };
-      return [...state, newTag];
+      return [...state, action.tag];
     }
     default:
       return state;

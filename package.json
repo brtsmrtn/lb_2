@@ -26,7 +26,7 @@
     "start": "react-scripts start",
     "build": "react-scripts build && rd /s /q docs && move build docs",
     "gh-pages-deploy": "react-scripts build && rm -rf docs && mv build docs",
-    "test:watch": "jest --watch",
+    "test:watch": "jest --watch --no-coverage",
     "test": "jest --collect-coverage",
     "eject": "react-scripts eject",
     "predeploy": "npm run build",
@@ -92,6 +92,7 @@
       "/node_modules/"
     ],
     "coverageReporters": [
+      "html",
       "json",
       "lcov",
       "text",
@@ -103,7 +104,6 @@
       "!src/setupTests.ts",
       "!src/react-app-env.d.ts"
     ],
-    "collectCoverage": true,
     "coverageThreshold": {
       "global": {
         "branches": 1,

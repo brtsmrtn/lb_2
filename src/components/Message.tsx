@@ -1,17 +1,11 @@
 import React from "react";
-import { UrlType } from "../types/Url";
-import { ListItem } from "../types/ListItem";
 import { errorMessageGenerator } from "../functions/errorMessageGenerator";
+import { useSelector } from "react-redux";
+import { ApplicationState } from "../app/store";
 
-type MessageProps = UrlType & {
-  items: ListItem[];
-};
-
-export const Message: (props: MessageProps) => JSX.Element = ({
-  items,
-  url,
-}: MessageProps) => {
-  const errorMessage = errorMessageGenerator(url, items);
+export const Message: () => JSX.Element = () => {
+  const { items, urlInput } = useSelector((state: ApplicationState) => state);
+  const errorMessage = errorMessageGenerator(urlInput, items);
   if (errorMessage) {
     return <p>▶ {errorMessage}</p>;
   } else {
