@@ -95,17 +95,16 @@ export function itemsReducer(
       return [...state, action.listItem];
     }
     case ASSIGN_TAG_TO_ITEM:
-      const indexOfItem = state.findIndex((item) => item.id === action.item.id);
-      if (
-        action.item.tags.filter((tag) => tag.title === action.tag.title).length
-      ) {
+      const { item } = action;
+      const indexOfItem = state.findIndex((it) => it.id === item.id);
+      if (item.tags.filter((tag) => tag.title === action.tag.title).length) {
         return [...state];
       } else {
         return [
           ...state.slice(0, indexOfItem),
           {
-            ...action.item,
-            tags: [...action.item.tags, action.tag],
+            ...item,
+            tags: [...item.tags, action.tag],
           },
           ...state.slice(indexOfItem + 1),
         ];
@@ -137,11 +136,7 @@ export function itemsReducer(
       }
     }
     case TOGGLE_ITEM_STATUS: {
-      return [
-        Object.assign({}, action.item, {
-          alreadyRead: !action.item.alreadyRead,
-        }),
-      ];
+      return [{ ...action.item, alreadyRead: !action.item.alreadyRead }];
     }
     default:
       return state;

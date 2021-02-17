@@ -24,9 +24,7 @@ export const TagButton: (props: TagButtonProps) => JSX.Element = ({
   item,
 }: TagButtonProps) => {
   const dispatch = useDispatch();
-  const knownTags = useSelector(
-    (state: ApplicationState) => state.knownTags
-  ).filter((t) => t.id !== "");
+  const knownTags = useSelector((state: ApplicationState) => state.knownTags);
   const [dialogOpen, setDialogOpen] = useState(false);
   const [errorTag, setErrorTag] = useState<ErrorTagMessage>(undefined);
   const isTagNew = (tagTitle: string, tags: Tag[]) =>
@@ -76,8 +74,13 @@ export const TagButton: (props: TagButtonProps) => JSX.Element = ({
         } else {
           const updateKnownTagsAction = addKnownTag(tagTitle);
           dispatch(updateKnownTagsAction);
-          dispatch(assignTagToItem(updateKnownTagsAction.tag, item));
-          setErrorTag(errorTags.empty);
+          const tagAlreadyAssigned = isTagNew(tagTitle, item.tags);
+          if (tagAlreadyAssigned) {
+            setErrorTag(errorTags.assigned);
+          } else {
+            dispatch(assignTagToItem(updateKnownTagsAction.tag, item));
+            setErrorTag(errorTags.empty);
+          }
         }
       }
     }
@@ -117,7 +120,7 @@ export const TagButton: (props: TagButtonProps) => JSX.Element = ({
             style={{
               marginBottom: "120px",
             }}
-            options={knownTags.filter((tag) => tag.id !== "")}
+            options={knownTags}
             getOptionLabel={(option) => option.title}
             value={item.tags}
             clearOnBlur={false}

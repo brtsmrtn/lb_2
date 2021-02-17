@@ -26,7 +26,12 @@ const TagList: (props: TagListProps) => JSX.Element = ({
             "data-tag-index": index,
           }}
           {...(editable && {
-            onDelete: () => dispatch(unassignTagFromItem(tag, item)),
+            onDelete: () => {
+              const tagAssigned = item.tags.find((t) => t.id === tag.id);
+              if (tagAssigned) {
+                dispatch(unassignTagFromItem(tag, item));
+              }
+            },
           })}
         />
       ))}
