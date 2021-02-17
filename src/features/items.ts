@@ -95,38 +95,33 @@ export function itemsReducer(
       return [...state, action.listItem];
     }
     case ASSIGN_TAG_TO_ITEM:
-      const { item } = action;
+      const { item, tag } = action;
       const indexOfItem = state.findIndex((it) => it.id === item.id);
-      if (item.tags.filter((tag) => tag.title === action.tag.title).length) {
+      if (item.tags.filter((t) => t.title === tag.title).length) {
         return [...state];
       } else {
         return [
           ...state.slice(0, indexOfItem),
           {
             ...item,
-            tags: [...item.tags, action.tag],
+            tags: [...item.tags, tag],
           },
           ...state.slice(indexOfItem + 1),
         ];
       }
 
     case UNASSIGN_TAG_FROM_ITEM: {
-      if (
-        action.item.tags.filter((tag) => tag.title === action.tag.title).length
-      ) {
-        const indexOfItem = state.findIndex(
-          (item) => item.id === action.item.id
-        );
-        const indexOfTag = action.item.tags.findIndex(
-          (tag) => tag.id === action.tag.id
-        );
+      const { item, tag } = action;
+      if (item.tags.filter((t) => t.title === tag.title).length) {
+        const indexOfItem = state.findIndex((it) => it.id === item.id);
+        const indexOfTag = item.tags.findIndex((tag) => tag.id === tag.id);
         return [
           ...state.slice(0, indexOfItem),
           {
-            ...action.item,
+            ...item,
             tags: [
-              ...action.item.tags.slice(0, indexOfTag),
-              ...action.item.tags.slice(indexOfTag + 1),
+              ...item.tags.slice(0, indexOfTag),
+              ...item.tags.slice(indexOfTag + 1),
             ],
           },
           ...state.slice(indexOfItem + 1),
