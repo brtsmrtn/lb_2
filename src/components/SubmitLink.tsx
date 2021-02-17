@@ -1,32 +1,31 @@
 import React from "react";
 import { isLinkDuplicate } from "../functions/isLinkDuplicate";
 import { isLinkValid } from "../functions/isLinkValid";
-import { ListItem } from "../types/ListItem";
-import { UrlType } from "../types/Url";
 import { Button } from "@material-ui/core";
 import { maxLinkLength } from "../utils/constants";
-type SubmitProps = UrlType & {
-  items: ListItem[];
-  onClick: (
-    event: React.MouseEvent<HTMLButtonElement, MouseEvent>
-  ) => void | undefined;
-};
+import { useDispatch, useSelector } from "react-redux";
+import { ApplicationState } from "../app/store";
+import { addNewItem } from "../features/items";
+import { setUrl } from "../features/urlInput";
 
-export const SubmitLink: (props: SubmitProps) => JSX.Element = ({
-  items,
-  onClick,
-  url,
-}: SubmitProps) => (
-  <Button
-    variant="outlined"
-    color="primary"
-    disabled={
-      !isLinkValid(url) ||
-      isLinkDuplicate(url, items) ||
-      url.length >= maxLinkLength
-    }
-    onClick={onClick}
-  >
-    Add link
-  </Button>
-);
+export const SubmitLink: () => JSX.Element = () => {
+  const dispatch = useDispatch();
+  const { items, urlInput } = useSelector((state: ApplicationState) => state);
+  return (
+    <Button
+      variant="outlined"
+      color="primary"
+      disabled={
+        !isLinkValid(urlInput) ||
+        isLinkDuplicate(urlInput, items) ||
+        urlInput.length >= maxLinkLength
+      }
+      onClick={() => {
+        dispatch(addNewItem(urlInput));
+        dispatch(setUrl(""));
+      }}
+    >
+      Add link
+    </Button>
+  );
+};

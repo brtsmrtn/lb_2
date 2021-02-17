@@ -1,6 +1,9 @@
 import React, { useState } from "react";
-import { Tag } from "../types/Tag";
+import { useDispatch, useSelector } from "react-redux";
+import Autocomplete from "@material-ui/lab/Autocomplete";
+import { ApplicationState } from "../app/store";
 import { ListItem } from "../types/ListItem";
+import { Tag } from "../types/Tag";
 import TagList from "./TagList";
 import { errorTags, ErrorTagMessage } from "../functions/errorMessages";
 import {
@@ -11,22 +14,17 @@ import {
   DialogContent,
   DialogContentText,
 } from "@material-ui/core";
-import Autocomplete from "@material-ui/lab/Autocomplete";
+import { addKnownTag } from "../features/tags";
+import { assignTagToItem } from "../features/items";
 
 export type TagButtonProps = {
   item: ListItem;
-  knownTags: Tag[];
-  tagAdded: (item: ListItem, tag: Tag) => void;
-  tagDeleted: (item: ListItem, tag: Tag) => void;
-  updateKnownTags: (title: string) => Tag | undefined;
 };
 export const TagButton: (props: TagButtonProps) => JSX.Element = ({
   item,
-  knownTags,
-  tagAdded,
-  tagDeleted,
-  updateKnownTags,
 }: TagButtonProps) => {
+  const dispatch = useDispatch();
+  const knownTags = useSelector((state: ApplicationState) => state.knownTags);
   const [dialogOpen, setDialogOpen] = useState(false);
   const [errorTag, setErrorTag] = useState<ErrorTagMessage>(undefined);
   const isTagNew = (tagTitle: string, tags: Tag[]) =>
@@ -38,7 +36,7 @@ export const TagButton: (props: TagButtonProps) => JSX.Element = ({
       if (tagAlreadyAssigned) {
         setErrorTag(errorTags.submit);
       } else {
-        tagAdded(item, targetTag);
+        dispatch(assignTagToItem(targetTag, item));
         setErrorTag(errorTags.empty);
       }
     }
@@ -64,22 +62,24 @@ export const TagButton: (props: TagButtonProps) => JSX.Element = ({
     e: React.KeyboardEvent<HTMLDivElement>,
     item: ListItem
   ) => {
-    const targetTag = e.target as HTMLTextAreaElement;
-    const targetTagTitle = targetTag.value;
-    if (e.key === "Enter" && targetTagTitle) {
-      const tagAlreadyAssigned = isTagNew(targetTagTitle, item.tags);
-      const tagAlreadyKnown = isTagNew(targetTagTitle, knownTags);
+    const tag = e.target as HTMLTextAreaElement;
+    const tagTitle = tag.value;
+    if (e.key === "Enter" && tagTitle) {
+      const tagAlreadyAssigned = isTagNew(tagTitle, item.tags);
+      const tagAlreadyKnown = isTagNew(tagTitle, knownTags);
       if (!tagAlreadyAssigned) {
         if (tagAlreadyKnown) {
-          tagAdded(item, tagAlreadyKnown);
+          dispatch(assignTagToItem(tagAlreadyKnown, item));
           setErrorTag(errorTags.empty);
         } else {
-          const tagIsNew = updateKnownTags(targetTagTitle);
-          if (tagIsNew) {
-            tagAdded(item, tagIsNew);
-            setErrorTag(errorTags.empty);
+          const updateKnownTagsAction = addKnownTag(tagTitle);
+          dispatch(updateKnownTagsAction);
+          const tagAlreadyAssigned = isTagNew(tagTitle, item.tags);
+          if (tagAlreadyAssigned) {
+            setErrorTag(errorTags.assigned);
           } else {
-            setErrorTag(errorTags.wrong);
+            dispatch(assignTagToItem(updateKnownTagsAction.tag, item));
+            setErrorTag(errorTags.empty);
           }
         }
       }
@@ -130,9 +130,11 @@ export const TagButton: (props: TagButtonProps) => JSX.Element = ({
             filterSelectedOptions
             selectOnFocus
             autoComplete
-            onChange={(_, value, reason) =>
-              onChangeAutocomplete(value, reason, item)
-            }
+            onChange={(_, value: Tag[] | undefined, reason) => {
+              if (value) {
+                onChangeAutocomplete(value, reason, item);
+              }
+            }}
             ListboxProps={{
               style: {
                 maxHeight: "100px",
@@ -147,9 +149,7 @@ export const TagButton: (props: TagButtonProps) => JSX.Element = ({
                 onKeyDown={(e) => onKeyDownTextField(e, item)}
               />
             )}
-            renderTags={() => (
-              <TagList editable={true} item={item} tagDeleted={tagDeleted} />
-            )}
+            renderTags={() => <TagList editable={true} item={item} />}
           />
         </DialogContent>
         <DialogActions>
