@@ -114,7 +114,7 @@ export function itemsReducer(
       const { item, tag } = action;
       if (item.tags.filter((t) => t.title === tag.title).length) {
         const indexOfItem = state.findIndex((it) => it.id === item.id);
-        const indexOfTag = item.tags.findIndex((tag) => tag.id === tag.id);
+        const indexOfTag = item.tags.findIndex((t) => t.id === tag.id);
         return [
           ...state.slice(0, indexOfItem),
           {
@@ -131,7 +131,13 @@ export function itemsReducer(
       }
     }
     case TOGGLE_ITEM_STATUS: {
-      return [{ ...action.item, alreadyRead: !action.item.alreadyRead }];
+      const { item } = action;
+      const indexOfItem = state.findIndex((it) => it.id === item.id);
+      return [
+        ...state.slice(0, indexOfItem),
+        { ...item, alreadyRead: !item.alreadyRead },
+        ...state.slice(indexOfItem + 1),
+      ];
     }
     default:
       return state;
