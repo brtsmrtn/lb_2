@@ -28,7 +28,6 @@ const TagList: (props: TagListProps) => JSX.Element = ({
           {...(editable && {
             onDelete: () => {
               const tagAssigned = item.tags.find((t) => t.id === tag.id);
-              console.log(tagAssigned);
               if (tagAssigned) {
                 dispatch(unassignTagFromItem(tag, item));
               }

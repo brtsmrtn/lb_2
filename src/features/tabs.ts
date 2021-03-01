@@ -1,7 +1,6 @@
 import { configureStore } from "@reduxjs/toolkit";
 import { Tab } from "../types/Tab";
 import { Tag } from "../types/Tag";
-let tabsCounter = 1;
 
 export const ADD_NEW_TAB = "ADD_NEW_TAB";
 export type AddNewTabAction = {
@@ -15,7 +14,7 @@ export const addNewTab: (tag: Tag) => AddNewTabAction = (tag) => {
     tab: {
       index: tabsCounter,
       title: tag.title,
-      alwaysVisible: false,
+      predefined: false,
       selected: false,
       coloredWith: tag.color,
     },
@@ -39,18 +38,19 @@ const initialTabs = [
   {
     index: 0,
     title: "to read",
-    alwaysVisible: true,
+    predefined: true,
     selected: true,
     coloredWith: "",
   },
   {
     index: 1,
     title: "already read",
-    alwaysVisible: true,
+    predefined: true,
     selected: false,
     coloredWith: "",
   },
 ];
+let tabsCounter = Math.max(...initialTabs.map((tab) => tab.index));
 export const initialTabsState: TabsState = initialTabs;
 export type TabsActions = AddNewTabAction | SelectTabAction;
 
@@ -64,11 +64,7 @@ export function tabsReducer(
     }
     case SELECT_TAB: {
       const unselectedTabs = [
-        ...state.map((o) => {
-          return Object.assign({}, o, {
-            selected: false,
-          });
-        }),
+        ...state.map((tab) => ({ ...tab, selected: false })),
       ];
       const selectedTab = unselectedTabs[action.index];
       const reselectedTabs = [
@@ -79,7 +75,6 @@ export function tabsReducer(
         },
         ...unselectedTabs.slice(selectedTab.index + 1),
       ];
-      console.log(reselectedTabs);
       return [...reselectedTabs.sort((a, b) => a.index - b.index)];
     }
     default:

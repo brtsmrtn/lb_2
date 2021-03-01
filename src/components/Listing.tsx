@@ -182,7 +182,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 type ItemsToTabConnectorType = {
   index: number;
   title: string;
-  alwaysVisible: boolean;
+  predefined: boolean;
   coloredWith: string;
   selected: boolean;
   items: ListItem[];
@@ -205,14 +205,12 @@ export const Listing: () => JSX.Element = () => {
           item.tags.find((tag) => tag.title === tabs[i].title)
         ),
       ];
-      console.log(updatedItems);
     }
     itemsToTabConnector.push({
       items: [...updatedItems],
       ...tabs[i],
     });
   }
-  console.log(itemsToTabConnector);
   const selectedTab = itemsToTabConnector.find((tab) => tab.selected);
   const selectedTabIndex = selectedTab ? selectedTab.index : 0;
   return (
@@ -230,10 +228,12 @@ export const Listing: () => JSX.Element = () => {
       >
         {itemsToTabConnector.map((tab) => {
           let className = classes.tab;
-          if (tab.coloredWith) {
-            className += ` chip-${tab.index - 1}`;
-          }
-          if ((tab.coloredWith && tab.items.length != 0) || tab.index < 2) {
+          const tabShouldBeDisplayed =
+            (!tab.predefined && tab.items.length !== 0) || tab.predefined;
+          if (tabShouldBeDisplayed) {
+            if (tab.coloredWith) {
+              className += ` chip-${tab.index - 1}`;
+            }
             return (
               <TabPanel
                 key={tab.index}

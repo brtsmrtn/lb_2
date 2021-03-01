@@ -1,7 +1,7 @@
 export type Tab = {
   index: number;
   title: string;
-  alwaysVisible: boolean;
+  predefined: boolean;
   selected: boolean;
   coloredWith: string;
 };
