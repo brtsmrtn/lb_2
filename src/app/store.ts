@@ -10,19 +10,22 @@ import {
   UrlInputActions,
   UrlInputState,
 } from "../features/urlInput";
+import { TabsActions, tabsReducer, TabsState } from "../features/tabs";
 
 export type ApplicationState = {
   knownTags: KnownTagsState;
   items: ItemsState;
   urlInput: UrlInputState;
+  tabs: TabsState;
 };
 export default configureStore<
   ApplicationState,
-  KnownTagsActions & ItemsActions & UrlInputActions
+  KnownTagsActions & ItemsActions & UrlInputActions & TabsActions
 >({
   reducer: {
     knownTags: knownTagsReducer,
     items: itemsReducer,
     urlInput: urlInputReducer,
+    tabs: tabsReducer,
   },
 });

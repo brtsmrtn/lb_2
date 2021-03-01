@@ -16,6 +16,7 @@ import {
 } from "@material-ui/core";
 import { addKnownTag } from "../features/tags";
 import { assignTagToItem } from "../features/items";
+import { addNewTab } from "../features/tabs";
 
 export type TagButtonProps = {
   item: ListItem;
@@ -78,6 +79,7 @@ export const TagButton: (props: TagButtonProps) => JSX.Element = ({
           if (tagAlreadyAssigned) {
             setErrorTag(errorTags.assigned);
           } else {
+            dispatch(addNewTab(updateKnownTagsAction.tag));
             dispatch(assignTagToItem(updateKnownTagsAction.tag, item));
             setErrorTag(errorTags.empty);
           }

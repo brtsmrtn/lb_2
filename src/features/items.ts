@@ -112,26 +112,29 @@ export function itemsReducer(
 
     case UNASSIGN_TAG_FROM_ITEM: {
       const { item, tag } = action;
-      if (item.tags.filter((t) => t.title === tag.title).length) {
-        const indexOfItem = state.findIndex((it) => it.id === item.id);
-        const indexOfTag = item.tags.findIndex((tag) => tag.id === tag.id);
-        return [
-          ...state.slice(0, indexOfItem),
-          {
-            ...item,
-            tags: [
-              ...item.tags.slice(0, indexOfTag),
-              ...item.tags.slice(indexOfTag + 1),
-            ],
-          },
-          ...state.slice(indexOfItem + 1),
-        ];
-      } else {
-        return [...state];
-      }
+      const tagIndex = item.tags.findIndex((itemTag) => itemTag.id === tag.id);
+      const modifiedTags = [
+        ...item.tags.slice(0, tagIndex),
+        ...item.tags.slice(tagIndex + 1),
+      ];
+      const modifiedItem = { ...item, tags: modifiedTags };
+      const modifiedItemIndex = state.findIndex(
+        (listItem) => listItem.id === modifiedItem.id
+      );
+      return [
+        ...state.slice(0, modifiedItemIndex),
+        modifiedItem,
+        ...state.slice(modifiedItemIndex + 1),
+      ];
     }
     case TOGGLE_ITEM_STATUS: {
-      return [{ ...action.item, alreadyRead: !action.item.alreadyRead }];
+      const { item } = action;
+      const indexOfItem = state.findIndex((it) => it.id === item.id);
+      return [
+        ...state.slice(0, indexOfItem),
+        { ...item, alreadyRead: !item.alreadyRead },
+        ...state.slice(indexOfItem + 1),
+      ];
     }
     default:
       return state;
