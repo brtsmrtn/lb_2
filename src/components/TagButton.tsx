@@ -122,8 +122,9 @@ export const TagButton: (props: TagButtonProps) => JSX.Element = ({
             style={{
               marginBottom: "120px",
             }}
-            options={knownTags}
-            getOptionLabel={(option) => option.title}
+            options={knownTags.filter((tag) => item.tags.indexOf(tag) === -1)}
+            getOptionLabel={(option) => option.title as string}
+            getOptionSelected={(option, value) => option.title === value.title}
             value={item.tags}
             clearOnBlur={false}
             multiple

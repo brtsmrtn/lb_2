@@ -18,7 +18,7 @@ export type ApplicationState = {
   tabs: TabsState;
 };
 
-const localStorages = ["knownTags", "items", "urlInput", "tabs"];
+const localStorages = ["knownTags", "items", "tabs"];
 
 function saveToLocalStorage(state: ApplicationState) {
   try {
@@ -40,13 +40,6 @@ function loadFromLocalStorage() {
       if (unserializedState !== null) {
         loadedState += '"' + storage + '":' + unserializedState + ",";
       }
-      // else {
-      //   if (storage === "urlInput") {
-      //     loadedState += '"' + storage + '":"",';
-      //   } else {
-      //     loadedState += '"' + storage + '":[],';
-      //   }
-      // }
     });
     return loadedState
       ? JSON.parse("{" + loadedState.replace(/,$/, "") + "}")

@@ -102,7 +102,7 @@ export function itemsReducer(
       const loadedItems = localStorage.getItem("LinkBiscuit_items");
       if (loadedItems) {
         const parsedItems: ListItem[] = JSON.parse(loadedItems);
-        itemsCounter = parsedItems.length;
+        itemsCounter = Math.max(...parsedItems.map((item) => Number(item.id)));
         return parsedItems;
       } else {
         return [];

@@ -25,9 +25,6 @@ export const ListingItem: (props: ListingItemProps) => JSX.Element = ({
           color="primary"
           onClick={() => {
             dispatch(toggleItemStatus(item));
-            // if (item.alreadyRead) {
-            //   dispatch(selectTab(0));
-            // }
             dispatch(selectTab(0));
           }}
         >
@@ -35,10 +32,10 @@ export const ListingItem: (props: ListingItemProps) => JSX.Element = ({
         </Button>
       </td>
       <td>
-        <TagButton item={item} />
+        <TagButton item={item} key={item.id} />
       </td>
       <td>
-        <TagList editable={false} item={item} />
+        <TagList editable={false} item={item} key={item.id} />
       </td>
     </tr>
   );

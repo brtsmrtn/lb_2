@@ -45,7 +45,7 @@ export function knownTagsReducer(
       const loadedTags = localStorage.getItem("LinkBiscuit_knownTags");
       if (loadedTags) {
         const parsedTags: Tag[] = JSON.parse(loadedTags);
-        tagsCounter = parsedTags.length;
+        tagsCounter = Math.max(...parsedTags.map((tag) => Number(tag.id)));
         return parsedTags;
       } else {
         return [];
