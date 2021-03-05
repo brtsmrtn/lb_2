@@ -1,6 +1,7 @@
 import { configureStore } from "@reduxjs/toolkit";
 import { Tab } from "../types/Tab";
 import { Tag } from "../types/Tag";
+import { linkBiscuitPrefix } from "../utils/constants";
 
 export const LOAD_TABS = "LOAD_TABS";
 export type LoadTabsAction = {
@@ -66,7 +67,7 @@ export function tabsReducer(
 ): TabsState {
   switch (action.type) {
     case LOAD_TABS: {
-      const loadedTabs = localStorage.getItem("LinkBiscuit_tabs");
+      const loadedTabs = localStorage.getItem(`${linkBiscuitPrefix}_tabs`);
       if (loadedTabs) {
         const parsedTabs: Tab[] = JSON.parse(loadedTabs);
         tabsCounter = Math.max(...parsedTabs.map((tab) => tab.index));

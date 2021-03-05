@@ -11,6 +11,7 @@ import {
   UrlInputState,
 } from "../features/urlInput";
 import { TabsActions, tabsReducer, TabsState } from "../features/tabs";
+import { linkBiscuitPrefix } from "../utils/constants";
 export type ApplicationState = {
   knownTags: KnownTagsState;
   items: ItemsState;
@@ -18,15 +19,19 @@ export type ApplicationState = {
   tabs: TabsState;
 };
 
-const localStorages = ["knownTags", "items", "tabs"];
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const localStorageArrays: { [key: string]: any[] } = {
+  knownTags: [],
+  items: [],
+  tabs: [],
+};
 
 function saveToLocalStorage(state: ApplicationState) {
   try {
-    localStorages.map((storage) => {
-      const storePart = storage as keyof typeof state;
-      const serialisedState = JSON.stringify(state[storePart]);
-      localStorage.setItem("LinkBiscuit_" + storage, serialisedState);
-    });
+    for (const [key] of Object.entries(localStorageArrays)) {
+      const storageState = JSON.stringify(state[key as keyof typeof state]);
+      localStorage.setItem(`${linkBiscuitPrefix}_${key}`, storageState);
+    }
   } catch (e) {
     console.warn(e);
   }
@@ -34,16 +39,13 @@ function saveToLocalStorage(state: ApplicationState) {
 
 function loadFromLocalStorage() {
   try {
-    let loadedState = "";
-    localStorages.map((storage) => {
-      const unserializedState = localStorage.getItem("LinkBiscuit_" + storage);
-      if (unserializedState !== null) {
-        loadedState += '"' + storage + '":' + unserializedState + ",";
+    for (const [key] of Object.entries(localStorageArrays)) {
+      const storageState = localStorage.getItem(`${linkBiscuitPrefix}_${key}`);
+      if (storageState !== null) {
+        localStorageArrays[key] = JSON.parse(storageState);
       }
-    });
-    return loadedState
-      ? JSON.parse("{" + loadedState.replace(/,$/, "") + "}")
-      : undefined;
+    }
+    return localStorageArrays ? localStorageArrays : undefined;
   } catch (e) {
     console.warn(e);
     return undefined;

@@ -16,3 +16,4 @@ export const COLORS = [
   "#b2dfdb",
   "#f5f5f5",
 ];
+export const linkBiscuitPrefix = "LinkBiscuit";

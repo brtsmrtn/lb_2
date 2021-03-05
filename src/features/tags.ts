@@ -1,6 +1,6 @@
 import { configureStore } from "@reduxjs/toolkit";
 import { Tag } from "../types/Tag";
-import { COLORS } from "../utils/constants";
+import { COLORS, linkBiscuitPrefix } from "../utils/constants";
 let tagsCounter = 0;
 
 export const LOAD_KNOWN_TAGS = "LOAD_KNOWN_TAGS";
@@ -42,7 +42,7 @@ export function knownTagsReducer(
 ): KnownTagsState {
   switch (action.type) {
     case LOAD_KNOWN_TAGS: {
-      const loadedTags = localStorage.getItem("LinkBiscuit_knownTags");
+      const loadedTags = localStorage.getItem(`${linkBiscuitPrefix}_tags`);
       if (loadedTags) {
         const parsedTags: Tag[] = JSON.parse(loadedTags);
         tagsCounter = Math.max(...parsedTags.map((tag) => Number(tag.id)));

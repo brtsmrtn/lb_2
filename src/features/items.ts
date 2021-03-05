@@ -1,6 +1,7 @@
 import { configureStore } from "@reduxjs/toolkit";
 import { ListItem } from "../types/ListItem";
 import { Tag } from "../types/Tag";
+import { linkBiscuitPrefix } from "../utils/constants";
 let itemsCounter = 0;
 
 export const LOAD_ITEMS = "LOAD_ITEMS";
@@ -99,7 +100,7 @@ export function itemsReducer(
 ): ItemsState {
   switch (action.type) {
     case LOAD_ITEMS: {
-      const loadedItems = localStorage.getItem("LinkBiscuit_items");
+      const loadedItems = localStorage.getItem(`${linkBiscuitPrefix}_items`);
       if (loadedItems) {
         const parsedItems: ListItem[] = JSON.parse(loadedItems);
         itemsCounter = Math.max(...parsedItems.map((item) => Number(item.id)));
