@@ -212,7 +212,8 @@ export const Listing: () => JSX.Element = () => {
     });
   }
   const selectedTab = itemsToTabConnector.find((tab) => tab.selected);
-  const selectedTabIndex = selectedTab ? selectedTab.index : 0;
+  const selectedTabIndex =
+    selectedTab && selectedTab.items.length ? selectedTab.index : 0;
   return (
     <div className={classes.root}>
       <Tabs
@@ -222,7 +223,7 @@ export const Listing: () => JSX.Element = () => {
         onChange={(event, newTabIndex) => {
           dispatch(selectTab(newTabIndex));
         }}
-        aria-label="Vertical tabs example"
+        aria-label="Tabs"
         indicatorColor="primary"
         className={classes.tabs}
       >
