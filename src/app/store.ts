@@ -1,9 +1,16 @@
-import { combineReducers, createStore } from "@reduxjs/toolkit";
-import { knownTagsReducer, KnownTagsState } from "../features/tags";
-import { itemsReducer, ItemsState } from "../features/items";
-import { urlInputReducer, UrlInputState } from "../features/urlInput";
-import { tabsReducer, TabsState } from "../features/tabs";
-
+import { configureStore } from "@reduxjs/toolkit";
+import {
+  knownTagsReducer,
+  KnownTagsActions,
+  KnownTagsState,
+} from "../features/tags";
+import { itemsReducer, ItemsActions, ItemsState } from "../features/items";
+import {
+  urlInputReducer,
+  UrlInputActions,
+  UrlInputState,
+} from "../features/urlInput";
+import { TabsActions, tabsReducer, TabsState } from "../features/tabs";
 export type ApplicationState = {
   knownTags: KnownTagsState;
   items: ItemsState;
@@ -11,10 +18,15 @@ export type ApplicationState = {
   tabs: TabsState;
 };
 
+const localStorages = ["knownTags", "items", "urlInput", "tabs"];
+
 function saveToLocalStorage(state: ApplicationState) {
   try {
-    const serialisedState = JSON.stringify(state);
-    localStorage.setItem("LinkBiscuit", serialisedState);
+    localStorages.map((storage) => {
+      const storePart = storage as keyof typeof state;
+      const serialisedState = JSON.stringify(state[storePart]);
+      localStorage.setItem("LinkBiscuit_" + storage, serialisedState);
+    });
   } catch (e) {
     console.warn(e);
   }
@@ -22,21 +34,44 @@ function saveToLocalStorage(state: ApplicationState) {
 
 function loadFromLocalStorage() {
   try {
-    const serialisedState = localStorage.getItem("LinkBiscuit");
-    if (serialisedState === null) return undefined;
-    return JSON.parse(serialisedState);
+    let loadedState = "";
+    localStorages.map((storage) => {
+      const unserializedState = localStorage.getItem("LinkBiscuit_" + storage);
+      if (unserializedState !== null) {
+        loadedState += '"' + storage + '":' + unserializedState + ",";
+      }
+      // else {
+      //   if (storage === "urlInput") {
+      //     loadedState += '"' + storage + '":"",';
+      //   } else {
+      //     loadedState += '"' + storage + '":[],';
+      //   }
+      // }
+    });
+    return loadedState
+      ? JSON.parse("{" + loadedState.replace(/,$/, "") + "}")
+      : undefined;
   } catch (e) {
     console.warn(e);
     return undefined;
   }
 }
-const rootReducers = combineReducers({
-  knownTags: knownTagsReducer,
-  items: itemsReducer,
-  urlInput: urlInputReducer,
-  tabs: tabsReducer,
-});
-const store = createStore(rootReducers, loadFromLocalStorage());
-store.subscribe(() => saveToLocalStorage(store.getState()));
 
+const preloadedState = loadFromLocalStorage();
+const store = configureStore<
+  ApplicationState,
+  KnownTagsActions & ItemsActions & UrlInputActions & TabsActions
+>({
+  reducer: {
+    knownTags: knownTagsReducer,
+    items: itemsReducer,
+    urlInput: urlInputReducer,
+    tabs: tabsReducer,
+  },
+  preloadedState,
+});
+store.dispatch({ type: "LOAD_ITEMS" });
+store.dispatch({ type: "LOAD_KNOWN_TAGS" });
+store.dispatch({ type: "LOAD_TABS" });
+store.subscribe(() => saveToLocalStorage(store.getState()));
 export default store;

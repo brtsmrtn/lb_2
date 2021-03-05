@@ -9,7 +9,7 @@ export const Message: () => JSX.Element = () => {
   if (errorMessage) {
     return <p>▶ {errorMessage}</p>;
   } else {
-    if (items.length) {
+    if (items) {
       return (
         <p>
           ▶ Wanna read something? You've got {items.length} link{""}

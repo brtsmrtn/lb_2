@@ -2,6 +2,12 @@ import { configureStore } from "@reduxjs/toolkit";
 import { Tab } from "../types/Tab";
 import { Tag } from "../types/Tag";
 
+export const LOAD_TABS = "LOAD_TABS";
+export type LoadTabsAction = {
+  type: typeof LOAD_TABS;
+};
+export const loadTabs: () => LoadTabsAction = () => ({ type: LOAD_TABS });
+
 export const ADD_NEW_TAB = "ADD_NEW_TAB";
 export type AddNewTabAction = {
   type: typeof ADD_NEW_TAB;
@@ -50,15 +56,25 @@ const initialTabs = [
     coloredWith: "",
   },
 ];
-let tabsCounter = Math.max(...initialTabs.map((tab) => tab.index));
 export const initialTabsState: TabsState = initialTabs;
-export type TabsActions = AddNewTabAction | SelectTabAction;
+let tabsCounter = Math.max(...initialTabs.map((tab) => tab.index));
+export type TabsActions = AddNewTabAction | SelectTabAction | LoadTabsAction;
 
 export function tabsReducer(
   state = initialTabsState,
   action: TabsActions
 ): TabsState {
   switch (action.type) {
+    case LOAD_TABS: {
+      const loadedTabs = localStorage.getItem("LinkBiscuit_tabs");
+      if (loadedTabs) {
+        const parsedTabs: Tab[] = JSON.parse(loadedTabs);
+        tabsCounter = Math.max(...parsedTabs.map((tab) => tab.index));
+        return parsedTabs;
+      } else {
+        return initialTabs;
+      }
+    }
     case ADD_NEW_TAB: {
       return [...state, action.tab];
     }

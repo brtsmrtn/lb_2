@@ -3,6 +3,12 @@ import { ListItem } from "../types/ListItem";
 import { Tag } from "../types/Tag";
 let itemsCounter = 0;
 
+export const LOAD_ITEMS = "LOAD_ITEMS";
+export type LoadItemsAction = {
+  type: typeof LOAD_ITEMS;
+};
+export const loadItems: () => LoadItemsAction = () => ({ type: LOAD_ITEMS });
+
 export const ADD_NEW_ITEM = "ADD_NEW_ITEM";
 export type AddNewItemAction = {
   type: typeof ADD_NEW_ITEM;
@@ -84,13 +90,24 @@ export type ItemsActions =
   | AssignTagToItemAction
   | AddNewItemAction
   | UnassignTagFromItemAction
-  | ToggleItemStatusAction;
+  | ToggleItemStatusAction
+  | LoadItemsAction;
 
 export function itemsReducer(
   state = initialItemsState,
   action: ItemsActions
 ): ItemsState {
   switch (action.type) {
+    case LOAD_ITEMS: {
+      const loadedItems = localStorage.getItem("LinkBiscuit_items");
+      if (loadedItems) {
+        const parsedItems: ListItem[] = JSON.parse(loadedItems);
+        itemsCounter = parsedItems.length;
+        return parsedItems;
+      } else {
+        return [];
+      }
+    }
     case ADD_NEW_ITEM: {
       return [...state, action.listItem];
     }
@@ -141,4 +158,6 @@ export function itemsReducer(
   }
 }
 
-export const ItemsStore = configureStore({ reducer: itemsReducer });
+export const ItemsStore = configureStore({
+  reducer: itemsReducer,
+});
