@@ -5,7 +5,6 @@ import { ListItem } from "../types/ListItem";
 import { TagButton } from "./TagButton";
 import TagList from "./TagList";
 import { toggleItemStatus } from "../features/items";
-import { selectTab } from "../features/tabs";
 
 type ListingItemProps = {
   item: ListItem;
@@ -25,7 +24,6 @@ export const ListingItem: (props: ListingItemProps) => JSX.Element = ({
           color="primary"
           onClick={() => {
             dispatch(toggleItemStatus(item));
-            dispatch(selectTab(0));
           }}
         >
           {item.alreadyRead ? "Unread" : "Read"}

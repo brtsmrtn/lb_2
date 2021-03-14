@@ -42,7 +42,7 @@ export function knownTagsReducer(
 ): KnownTagsState {
   switch (action.type) {
     case LOAD_KNOWN_TAGS: {
-      const loadedTags = localStorage.getItem(`${linkBiscuitPrefix}_tags`);
+      const loadedTags = localStorage.getItem(`${linkBiscuitPrefix}_knownTags`);
       if (loadedTags) {
         const parsedTags: Tag[] = JSON.parse(loadedTags);
         tagsCounter = Math.max(...parsedTags.map((tag) => Number(tag.id)));
