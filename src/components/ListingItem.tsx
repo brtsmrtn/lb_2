@@ -1,14 +1,13 @@
 import React from "react";
 import { useDispatch } from "react-redux";
 import { Button } from "@material-ui/core";
-import { ListItem } from "../types/ListItem";
+import { ItemType } from "../types/ListItem";
 import { TagButton } from "./TagButton";
 import TagList from "./TagList";
 import { toggleItemStatus } from "../features/items";
-import { selectTab } from "../features/tabs";
 
 type ListingItemProps = {
-  item: ListItem;
+  item: ItemType;
 };
 
 export const ListingItem: (props: ListingItemProps) => JSX.Element = ({
@@ -25,7 +24,6 @@ export const ListingItem: (props: ListingItemProps) => JSX.Element = ({
           color="primary"
           onClick={() => {
             dispatch(toggleItemStatus(item));
-            dispatch(selectTab(0));
           }}
         >
           {item.alreadyRead ? "Unread" : "Read"}

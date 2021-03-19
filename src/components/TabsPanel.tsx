@@ -1,12 +1,10 @@
 import React from "react";
-import { ListingItem } from "./ListingItem";
-import { useSelector, useDispatch } from "react-redux";
-import { ApplicationState } from "../app/store";
-import { Tab as TabPanel, Tabs } from "@material-ui/core";
+import { Tab as Tab, Tabs } from "@material-ui/core";
 import { makeStyles, Theme } from "@material-ui/core/styles";
-import { selectTab } from "../features/tabs";
-import { ListItem } from "../types/ListItem";
 import { COLORS } from "../utils/constants";
+import { Link, useParams } from "react-router-dom";
+import { TabType } from "../types/Tab";
+import { TabsContent } from "./TabsContent";
 
 const useStyles = makeStyles((theme: Theme) => ({
   label: {
@@ -176,68 +174,42 @@ const useStyles = makeStyles((theme: Theme) => ({
     "& span.MuiTab-wrapper, & span.MuiTouchRipple-root": {
       alignItems: "flex-end",
     },
+    textColor: "",
   },
 }));
 
-type ItemsToTabConnectorType = {
-  index: number;
-  title: string;
-  predefined: boolean;
-  coloredWith: string;
-  selected: boolean;
-  items: ListItem[];
+export type TabsPanelProps = {
+  displayTabs: TabType[];
 };
-
-export const Listing: () => JSX.Element = () => {
-  const dispatch = useDispatch();
+export const TabsPanel: (props: TabsPanelProps) => JSX.Element = ({
+  displayTabs,
+}: TabsPanelProps) => {
   const classes = useStyles();
-  const { items, tabs } = useSelector((state: ApplicationState) => state);
-  const itemsToTabConnector: ItemsToTabConnectorType[] = [];
-  for (let i = 0; i < tabs.length; i++) {
-    let updatedItems = [];
-    if (i === 0) {
-      updatedItems = [...items.filter((item) => !item.alreadyRead)];
-    } else if (i === 1) {
-      updatedItems = [...items.filter((item) => item.alreadyRead)];
-    } else {
-      updatedItems = [
-        ...items.filter((item) =>
-          item.tags.find((tag) => tag.title === tabs[i].title)
-        ),
-      ];
-    }
-    itemsToTabConnector.push({
-      items: [...updatedItems],
-      ...tabs[i],
-    });
-  }
-  const selectedTab = itemsToTabConnector.find((tab) => tab.selected);
-  const selectedTabIndex =
-    selectedTab && selectedTab.items.length ? selectedTab.index : 0;
+  const { tabName } = useParams<{ tabName: string }>();
+  const selectedTabTitle = decodeURIComponent(tabName).replace("_", " ");
+  const selectedTab = displayTabs.find((tab) => tab.title === selectedTabTitle);
+  const selectedTabIndex = selectedTab ? selectedTab.index : 0;
   return (
     <div className={classes.root}>
       <Tabs
         orientation="vertical"
         variant="scrollable"
         value={selectedTabIndex}
-        onChange={(event, newTabIndex) => {
-          dispatch(selectTab(newTabIndex));
-        }}
         aria-label="Tabs"
         indicatorColor="primary"
         className={classes.tabs}
       >
-        {itemsToTabConnector.map((tab) => {
-          let className = classes.tab;
-          const tabShouldBeDisplayed =
-            (!tab.predefined && tab.items.length !== 0) || tab.predefined;
-          if (tabShouldBeDisplayed) {
+        {displayTabs.map((tab) => {
+          if (tab) {
+            let className = classes.tab;
             if (tab.coloredWith) {
               className += ` chip-${tab.index - 1}`;
             }
             return (
-              <TabPanel
+              <Tab
                 key={tab.index}
+                component={Link}
+                to={`/lb_2/${tab.title.replace(" ", "_")}`}
                 label={`${tab.title}`}
                 value={tab.index}
                 id={`vertical-tab-${tab.index}`}
@@ -248,33 +220,10 @@ export const Listing: () => JSX.Element = () => {
           }
         })}
       </Tabs>
-      {itemsToTabConnector.map((tab) => (
-        <div
-          role="tabpanel"
-          hidden={selectedTabIndex !== tab.index}
-          id={`vertical-tabpanel-${tab.index}`}
-          aria-labelledby={`vertical-tab-${tab.index}`}
-          key={tab.index}
-        >
-          <table>
-            <thead>
-              {tab.items.length ? (
-                <tr>
-                  <th>URL</th>
-                  <th>Date</th>
-                </tr>
-              ) : (
-                <tr></tr>
-              )}
-            </thead>
-            <tbody>
-              {tab.items.map((item) => (
-                <ListingItem item={item} key={item.id} />
-              ))}
-            </tbody>
-          </table>
-        </div>
-      ))}
+      <TabsContent
+        displayTabs={displayTabs}
+        selectedTabIndex={selectedTabIndex}
+      />
     </div>
   );
 };

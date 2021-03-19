@@ -1,5 +1,5 @@
 import { configureStore } from "@reduxjs/toolkit";
-import { Tag } from "../types/Tag";
+import { TagType } from "../types/Tag";
 import { COLORS, linkBiscuitPrefix } from "../utils/constants";
 let tagsCounter = 0;
 
@@ -14,7 +14,7 @@ export const loadKnownTags: () => LoadKnownTagsAction = () => ({
 export const ADD_KNOWN_TAG = "ADD_KNOWN_TAG";
 export type AddKnownTagAction = {
   type: typeof ADD_KNOWN_TAG;
-  tag: Tag;
+  tag: TagType;
 };
 export const addKnownTag: (title: string) => AddKnownTagAction = (title) => {
   tagsCounter++;
@@ -31,7 +31,7 @@ export const addKnownTag: (title: string) => AddKnownTagAction = (title) => {
   };
 };
 
-export type KnownTagsState = Tag[];
+export type KnownTagsState = TagType[];
 const initialKnownTagsState: KnownTagsState = [];
 
 export type KnownTagsActions = AddKnownTagAction | LoadKnownTagsAction;
@@ -42,9 +42,9 @@ export function knownTagsReducer(
 ): KnownTagsState {
   switch (action.type) {
     case LOAD_KNOWN_TAGS: {
-      const loadedTags = localStorage.getItem(`${linkBiscuitPrefix}_tags`);
+      const loadedTags = localStorage.getItem(`${linkBiscuitPrefix}_knownTags`);
       if (loadedTags) {
-        const parsedTags: Tag[] = JSON.parse(loadedTags);
+        const parsedTags: TagType[] = JSON.parse(loadedTags);
         tagsCounter = Math.max(...parsedTags.map((tag) => Number(tag.id)));
         return parsedTags;
       } else {

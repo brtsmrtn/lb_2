@@ -1,7 +1,6 @@
-export type Tab = {
+export type TabType = {
   index: number;
   title: string;
   predefined: boolean;
-  selected: boolean;
   coloredWith: string;
 };
