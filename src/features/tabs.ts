@@ -1,7 +1,11 @@
 import { configureStore } from "@reduxjs/toolkit";
-import { Tab } from "../types/Tab";
-import { Tag } from "../types/Tag";
-import { linkBiscuitPrefix } from "../utils/constants";
+import { TabType } from "../types/Tab";
+import { TagType } from "../types/Tag";
+import {
+  linkBiscuitPrefix,
+  toReadTitle,
+  unreadTitle,
+} from "../utils/constants";
 
 export const LOAD_TABS = "LOAD_TABS";
 export type LoadTabsAction = {
@@ -12,9 +16,9 @@ export const loadTabs: () => LoadTabsAction = () => ({ type: LOAD_TABS });
 export const ADD_NEW_TAB = "ADD_NEW_TAB";
 export type AddNewTabAction = {
   type: typeof ADD_NEW_TAB;
-  tab: Tab;
+  tab: TabType;
 };
-export const addNewTab: (tag: Tag) => AddNewTabAction = (tag) => {
+export const addNewTab: (tag: TagType) => AddNewTabAction = (tag) => {
   tabsCounter++;
   return {
     type: ADD_NEW_TAB,
@@ -27,17 +31,17 @@ export const addNewTab: (tag: Tag) => AddNewTabAction = (tag) => {
   };
 };
 
-export type TabsState = Tab[];
+export type TabsState = TabType[];
 const initialTabs = [
   {
     index: 0,
-    title: "to read",
+    title: toReadTitle,
     predefined: true,
     coloredWith: "",
   },
   {
     index: 1,
-    title: "already read",
+    title: unreadTitle,
     predefined: true,
     coloredWith: "",
   },
@@ -54,7 +58,7 @@ export function tabsReducer(
     case LOAD_TABS: {
       const loadedTabs = localStorage.getItem(`${linkBiscuitPrefix}_tabs`);
       if (loadedTabs) {
-        const parsedTabs: Tab[] = JSON.parse(loadedTabs);
+        const parsedTabs: TabType[] = JSON.parse(loadedTabs);
         tabsCounter = Math.max(...parsedTabs.map((tab) => tab.index));
         return parsedTabs;
       } else {

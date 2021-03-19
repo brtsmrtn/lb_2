@@ -2,11 +2,11 @@ import React from "react";
 import { ListingItem } from "./ListingItem";
 import { useSelector } from "react-redux";
 import { ApplicationState } from "../app/store";
-import { ListItem } from "../types/ListItem";
-import { Tab } from "../types/Tab";
+import { TabType } from "../types/Tab";
+import { toReadTitle, unreadTitle } from "../utils/constants";
 
 export type TabsContentProps = {
-  displayTabs: Tab[];
+  displayTabs: TabType[];
   selectedTabIndex: number;
 };
 export const TabsContent: (props: TabsContentProps) => JSX.Element = ({
@@ -14,19 +14,21 @@ export const TabsContent: (props: TabsContentProps) => JSX.Element = ({
   selectedTabIndex,
 }: TabsContentProps) => {
   const { items } = useSelector((state: ApplicationState) => state);
+  const whichItemsToDisplay = (tab: TabType) => {
+    if (tab.title === toReadTitle) {
+      return items.filter((item) => !item.alreadyRead);
+    } else if (tab.title === unreadTitle) {
+      return items.filter((item) => item.alreadyRead);
+    } else {
+      return items.filter((item) =>
+        item.tags.find((tag) => tag.title === tab.title)
+      );
+    }
+  };
   return (
     <div>
       {displayTabs.map((tab) => {
-        let itemsToDisplay: ListItem[] = [];
-        if (tab.title === "to read") {
-          itemsToDisplay = items.filter((item) => !item.alreadyRead);
-        } else if (tab.title === "already read") {
-          itemsToDisplay = items.filter((item) => item.alreadyRead);
-        } else {
-          itemsToDisplay = items.filter((item) =>
-            item.tags.find((tag) => tag.title === tab.title)
-          );
-        }
+        const itemsToDisplay = whichItemsToDisplay(tab);
         return (
           <div
             role="tabpanel"
@@ -35,23 +37,28 @@ export const TabsContent: (props: TabsContentProps) => JSX.Element = ({
             aria-labelledby={`vertical-tab-${tab.index}`}
             key={tab.index}
           >
-            <table>
-              <thead>
-                {itemsToDisplay.length ? (
+            {itemsToDisplay.length ? (
+              <table>
+                <thead>
                   <tr>
                     <th>URL</th>
                     <th>Date</th>
                   </tr>
-                ) : (
+                </thead>
+                <tbody>
+                  {itemsToDisplay.map((item) => (
+                    <ListingItem item={item} key={item.id} />
+                  ))}
+                </tbody>
+              </table>
+            ) : (
+              <table>
+                <thead>
                   <tr></tr>
-                )}
-              </thead>
-              <tbody>
-                {itemsToDisplay.map((item) => (
-                  <ListingItem item={item} key={item.id} />
-                ))}
-              </tbody>
-            </table>
+                </thead>
+                <tbody>empty</tbody>
+              </table>
+            )}
           </div>
         );
       })}

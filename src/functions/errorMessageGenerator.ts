@@ -1,4 +1,4 @@
-import { ListItem } from "../types/ListItem";
+import { ItemType } from "../types/ListItem";
 import { isLinkProvided } from "./isLinkProvided";
 import { linkStartsWithHttps } from "./linkStartsWithHttps";
 import { isLinkValid } from "./isLinkValid";
@@ -8,7 +8,7 @@ import { maxLinkLength } from "../utils/constants";
 
 export function errorMessageGenerator(
   url: string,
-  items: ListItem[]
+  items: ItemType[]
 ): ErrorMessageMessage {
   if (isLinkProvided(url)) {
     if (linkStartsWithHttps(url)) {

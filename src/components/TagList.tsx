@@ -1,12 +1,12 @@
 import React from "react";
 import { useDispatch } from "react-redux";
 import Chip from "@material-ui/core/Chip";
-import { ListItem } from "../types/ListItem";
-import { Tag } from "../types/Tag";
+import { ItemType } from "../types/ListItem";
+import { TagType } from "../types/Tag";
 import { unassignTagFromItem } from "../features/items";
 export type TagListProps = {
   editable: boolean;
-  item: ListItem;
+  item: ItemType;
 };
 const TagList: (props: TagListProps) => JSX.Element = ({
   editable,
@@ -15,7 +15,7 @@ const TagList: (props: TagListProps) => JSX.Element = ({
   const dispatch = useDispatch();
   return (
     <div>
-      {item.tags.map((tag: Tag, index: number) => (
+      {item.tags.map((tag: TagType, index: number) => (
         <Chip
           key={tag.id}
           label={tag.title}

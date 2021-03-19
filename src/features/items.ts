@@ -1,6 +1,6 @@
 import { configureStore } from "@reduxjs/toolkit";
-import { ListItem } from "../types/ListItem";
-import { Tag } from "../types/Tag";
+import { ItemType } from "../types/ListItem";
+import { TagType } from "../types/Tag";
 import { linkBiscuitPrefix } from "../utils/constants";
 let itemsCounter = 0;
 
@@ -13,7 +13,7 @@ export const loadItems: () => LoadItemsAction = () => ({ type: LOAD_ITEMS });
 export const ADD_NEW_ITEM = "ADD_NEW_ITEM";
 export type AddNewItemAction = {
   type: typeof ADD_NEW_ITEM;
-  listItem: ListItem;
+  listItem: ItemType;
 };
 export const addNewItem: (url: string) => AddNewItemAction = (url) => {
   itemsCounter++;
@@ -32,12 +32,12 @@ export const addNewItem: (url: string) => AddNewItemAction = (url) => {
 export const ASSIGN_TAG_TO_ITEM = "ASSIGN_TAG_TO_ITEM";
 export type AssignTagToItemAction = {
   type: typeof ASSIGN_TAG_TO_ITEM;
-  item: ListItem;
-  tag: Tag;
+  item: ItemType;
+  tag: TagType;
 };
 export const assignTagToItem: (
-  tag: Tag,
-  item: ListItem
+  tag: TagType,
+  item: ItemType
 ) => AssignTagToItemAction = (tag, item) => {
   return {
     type: ASSIGN_TAG_TO_ITEM,
@@ -49,12 +49,12 @@ export const assignTagToItem: (
 export const UNASSIGN_TAG_FROM_ITEM = "UNASSIGN_TAG_FROM_ITEM";
 export type UnassignTagFromItemAction = {
   type: typeof UNASSIGN_TAG_FROM_ITEM;
-  tag: Tag;
-  item: ListItem;
+  tag: TagType;
+  item: ItemType;
 };
 export const unassignTagFromItem: (
-  tag: Tag,
-  item: ListItem
+  tag: TagType,
+  item: ItemType
 ) => UnassignTagFromItemAction = (tag, item) => {
   return {
     type: UNASSIGN_TAG_FROM_ITEM,
@@ -66,9 +66,9 @@ export const unassignTagFromItem: (
 export const TOGGLE_ITEM_STATUS = "TOGGLE_ITEM_STATUS";
 export type ToggleItemStatusAction = {
   type: typeof TOGGLE_ITEM_STATUS;
-  item: ListItem;
+  item: ItemType;
 };
-export const toggleItemStatus: (item: ListItem) => ToggleItemStatusAction = (
+export const toggleItemStatus: (item: ItemType) => ToggleItemStatusAction = (
   item
 ) => {
   return {
@@ -77,7 +77,7 @@ export const toggleItemStatus: (item: ListItem) => ToggleItemStatusAction = (
   };
 };
 
-export type ItemsState = ListItem[];
+export type ItemsState = ItemType[];
 // const initialItem = {
 //   id: "1",
 //   url: "url",
@@ -102,7 +102,7 @@ export function itemsReducer(
     case LOAD_ITEMS: {
       const loadedItems = localStorage.getItem(`${linkBiscuitPrefix}_items`);
       if (loadedItems) {
-        const parsedItems: ListItem[] = JSON.parse(loadedItems);
+        const parsedItems: ItemType[] = JSON.parse(loadedItems);
         itemsCounter = Math.max(...parsedItems.map((item) => Number(item.id)));
         return parsedItems;
       } else {

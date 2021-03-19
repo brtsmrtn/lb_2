@@ -1,9 +1,9 @@
 import React from "react";
-import { Tab as TabInPanel, Tabs } from "@material-ui/core";
+import { Tab as Tab, Tabs } from "@material-ui/core";
 import { makeStyles, Theme } from "@material-ui/core/styles";
 import { COLORS } from "../utils/constants";
 import { Link, useParams } from "react-router-dom";
-import { Tab } from "../types/Tab";
+import { TabType } from "../types/Tab";
 import { TabsContent } from "./TabsContent";
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -179,7 +179,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 }));
 
 export type TabsPanelProps = {
-  displayTabs: Tab[];
+  displayTabs: TabType[];
 };
 export const TabsPanel: (props: TabsPanelProps) => JSX.Element = ({
   displayTabs,
@@ -206,7 +206,7 @@ export const TabsPanel: (props: TabsPanelProps) => JSX.Element = ({
               className += ` chip-${tab.index - 1}`;
             }
             return (
-              <TabInPanel
+              <Tab
                 key={tab.index}
                 component={Link}
                 to={`/lb_2/${tab.title.replace(" ", "_")}`}

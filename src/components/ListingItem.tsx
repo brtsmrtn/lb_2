@@ -1,13 +1,13 @@
 import React from "react";
 import { useDispatch } from "react-redux";
 import { Button } from "@material-ui/core";
-import { ListItem } from "../types/ListItem";
+import { ItemType } from "../types/ListItem";
 import { TagButton } from "./TagButton";
 import TagList from "./TagList";
 import { toggleItemStatus } from "../features/items";
 
 type ListingItemProps = {
-  item: ListItem;
+  item: ItemType;
 };
 
 export const ListingItem: (props: ListingItemProps) => JSX.Element = ({

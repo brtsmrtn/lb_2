@@ -19,3 +19,5 @@ export const COLORS = [
 export const linkBiscuitPrefix = "LinkBiscuit";
 export const pathPrefix = "/lb_2/";
 export const defaultPath = "to_read";
+export const toReadTitle = "to read";
+export const unreadTitle = "already read";

@@ -11,7 +11,7 @@ import { defaultPath, pathPrefix } from "./utils/constants";
 
 const App: () => JSX.Element = () => {
   const { items, tabs } = useSelector((state: ApplicationState) => state);
-  const predefinedTabs = tabs
+  const predefinedTabTitles = tabs
     .filter((tab) => tab.predefined)
     .map((tab) => tab.title);
   const usedTags = items.reduce((acc: string[], cur) => {
@@ -22,9 +22,9 @@ const App: () => JSX.Element = () => {
     });
     return acc;
   }, []);
-  const availableTabsTitles = predefinedTabs.concat(usedTags);
+  const availableTabTitles = predefinedTabTitles.concat(usedTags);
   const displayTabs = tabs.filter((tab) =>
-    availableTabsTitles.includes(tab.title)
+    availableTabTitles.includes(tab.title)
   );
   return (
     <div>
