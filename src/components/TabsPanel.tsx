@@ -1,5 +1,5 @@
 import React from "react";
-import { Tab as Tab, Tabs } from "@material-ui/core";
+import { Tab, Tabs } from "@material-ui/core";
 import { makeStyles, Theme } from "@material-ui/core/styles";
 import { COLORS } from "../utils/constants";
 import { Link, useParams } from "react-router-dom";
