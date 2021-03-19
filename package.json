@@ -29,9 +29,7 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "remove-docs": "test -d docs && rm -rf docs; react-scripts move-build",
-    "move-build ": "dir",
-    "gh-pages-deploy": "react-scripts build && rm -rf docs; mkdir docs && mv build docs",
+    "gh-pages-deploy": "react-scripts build && rm -rf docs; mv build backup-xx && mkdir build",
     "test:watch": "jest --watch --no-coverage",
     "test": "jest --collect-coverage",
     "eject": "react-scripts eject",
