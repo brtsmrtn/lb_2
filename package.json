@@ -28,8 +28,8 @@
   },
   "scripts": {
     "start": "react-scripts start",
-    "build": "react-scripts build && rd /s /q docs && move build docs",
-    "gh-pages-deploy": "react-scripts build && rmdir docs && mv build docs",
+    "build": "react-scripts build && mv build docs",
+    "gh-pages-deploy": "react-scripts rm -rf docs && react-scripts build",
     "test:watch": "jest --watch --no-coverage",
     "test": "jest --collect-coverage",
     "eject": "react-scripts eject",
