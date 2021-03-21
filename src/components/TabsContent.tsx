@@ -56,7 +56,12 @@ export const TabsContent: (props: TabsContentProps) => JSX.Element = ({
                 <thead>
                   <tr></tr>
                 </thead>
-                <tbody>empty</tbody>
+                <tbody>
+                  <tr>
+                    <th>URL</th>
+                    <th>Date</th>
+                  </tr>
+                </tbody>
               </table>
             )}
           </div>

@@ -23,5 +23,10 @@ jobs:
       - name: Run tests
         run: npm run test
 
-      - name: Deploy new version
-        run: npm run gh-pages-deploy
+      - name: Deploy
+        uses: JamesIves/github-pages-deploy-action@4.1.0
+        with:
+          git-config-name: "brtsmrtn"
+          git-config-email: "brtsmrtn@gmail.com"
+          branch: gh-pages
+          folder: build

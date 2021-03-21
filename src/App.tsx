@@ -3,11 +3,11 @@ import { AddLink } from "./components/AddLink";
 import { SubmitLink } from "./components/SubmitLink";
 import { Message } from "./components/Message";
 import { TabsPanel } from "./components/TabsPanel";
-import { Redirect, Route, withRouter } from "react-router-dom";
+import { Redirect, Route, Switch, withRouter } from "react-router-dom";
 import "./App";
 import { useSelector } from "react-redux";
 import { ApplicationState } from "./app/store";
-import { defaultPath, pathPrefix } from "./utils/constants";
+import { defaultPath } from "./utils/constants";
 
 const App: () => JSX.Element = () => {
   const { items, tabs } = useSelector((state: ApplicationState) => state);
@@ -31,22 +31,23 @@ const App: () => JSX.Element = () => {
       <AddLink />
       <SubmitLink />
       <Message />
-      <Route exact path={pathPrefix}>
-        <Redirect to={`${pathPrefix}${defaultPath}`} />
-      </Route>
-      <Route
-        exact
-        path={`${pathPrefix}:tabName`}
-        render={({ location }) => {
-          const tabLocation = location.pathname
-            .replace(pathPrefix, "")
-            .replace("_", " ");
-          if (displayTabs.find((tab) => tab.title === tabLocation)) {
-            return <TabsPanel displayTabs={displayTabs} />;
-          }
-          return <Redirect to={`${pathPrefix}${defaultPath}`} />;
-        }}
-      />
+      <Switch>
+        <Route exact path="/">
+          <Redirect to={`/${defaultPath}`} />
+        </Route>
+        <Route
+          path={"/:tabName"}
+          render={({ location }) => {
+            const tabLocation = location.pathname
+              .replace("/", "")
+              .replace("_", " ");
+            if (displayTabs.find((tab) => tab.title === tabLocation)) {
+              return <TabsPanel displayTabs={displayTabs} />;
+            }
+            return <Redirect to={`/${defaultPath}`} />;
+          }}
+        />
+      </Switch>
     </div>
   );
 };

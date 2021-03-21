@@ -1,5 +1,5 @@
 import React from "react";
-import { Tab as Tab, Tabs } from "@material-ui/core";
+import { Tab, Tabs } from "@material-ui/core";
 import { makeStyles, Theme } from "@material-ui/core/styles";
 import { COLORS } from "../utils/constants";
 import { Link, useParams } from "react-router-dom";
@@ -209,7 +209,7 @@ export const TabsPanel: (props: TabsPanelProps) => JSX.Element = ({
               <Tab
                 key={tab.index}
                 component={Link}
-                to={`/lb_2/${tab.title.replace(" ", "_")}`}
+                to={`/${tab.title.replace(" ", "_")}`}
                 label={`${tab.title}`}
                 value={tab.index}
                 id={`vertical-tab-${tab.index}`}
