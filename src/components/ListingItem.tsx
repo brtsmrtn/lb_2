@@ -37,7 +37,7 @@ export const ListingItem: (props: ListingItemProps) => JSX.Element = ({
             dispatch(deleteItem(item));
           }}
         >
-          Delete
+          Delete link
         </Button>
       </td>
       <td>
