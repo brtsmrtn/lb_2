@@ -24,4 +24,4 @@ jobs:
         run: npm run test
 
       - name: Deploy new version
-        run: npm run gh-pages-deploy
+        run: npm run deploy

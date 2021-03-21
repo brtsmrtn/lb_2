@@ -209,7 +209,7 @@ export const TabsPanel: (props: TabsPanelProps) => JSX.Element = ({
               <Tab
                 key={tab.index}
                 component={Link}
-                to={`/lb_2/${tab.title.replace(" ", "_")}`}
+                to={`/${tab.title.replace(" ", "_")}`}
                 label={`${tab.title}`}
                 value={tab.index}
                 id={`vertical-tab-${tab.index}`}
