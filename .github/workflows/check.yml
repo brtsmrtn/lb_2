@@ -1,0 +1,24 @@
+name: Test and check
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout main repo
+        uses: actions/checkout@v2
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Format check
+        run: npm run eslint
+
+      - name: Run tests
+        run: npm run test
