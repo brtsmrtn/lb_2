@@ -4,7 +4,7 @@ import { Button } from "@material-ui/core";
 import { ItemType } from "../types/ListItem";
 import { TagButton } from "./TagButton";
 import TagList from "./TagList";
-import { toggleItemStatus } from "../features/items";
+import { toggleItemStatus, deleteItem } from "../features/items";
 
 type ListingItemProps = {
   item: ItemType;
@@ -27,6 +27,17 @@ export const ListingItem: (props: ListingItemProps) => JSX.Element = ({
           }}
         >
           {item.alreadyRead ? "Unread" : "Read"}
+        </Button>
+      </td>
+      <td>
+        <Button
+          variant="outlined"
+          color="primary"
+          onClick={() => {
+            dispatch(deleteItem(item));
+          }}
+        >
+          Delete
         </Button>
       </td>
       <td>
