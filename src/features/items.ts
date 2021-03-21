@@ -10,6 +10,18 @@ export type LoadItemsAction = {
 };
 export const loadItems: () => LoadItemsAction = () => ({ type: LOAD_ITEMS });
 
+export const DELETE_ITEM = "DELETE_ITEM";
+export type DeleteItemAction = {
+  type: typeof DELETE_ITEM;
+  listItem: ItemType;
+};
+
+export const deleteItem: (item: ItemType) => DeleteItemAction = (item) => {
+  return {
+    type: DELETE_ITEM,
+    listItem: item,
+  };
+};
 export const ADD_NEW_ITEM = "ADD_NEW_ITEM";
 export type AddNewItemAction = {
   type: typeof ADD_NEW_ITEM;
@@ -89,6 +101,7 @@ export const initialItemsState: ItemsState = [];
 
 export type ItemsActions =
   | AssignTagToItemAction
+  | DeleteItemAction
   | AddNewItemAction
   | UnassignTagFromItemAction
   | ToggleItemStatusAction
@@ -111,6 +124,12 @@ export function itemsReducer(
     }
     case ADD_NEW_ITEM: {
       return [...state, action.listItem];
+    }
+    case DELETE_ITEM: {
+      const deletedItemIndex = state.findIndex(
+        (listItem) => listItem.id === action.listItem.id
+      );
+      return [...state.slice(0, deletedItemIndex)];
     }
     case ASSIGN_TAG_TO_ITEM:
       const { item, tag } = action;
