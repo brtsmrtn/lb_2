@@ -1,13 +1,13 @@
 name: Build LB
 
 on:
-  pull_request:
   push:
     branches:
       - main
 
 jobs:
   build-and-deploy:
+    name: Deploying LB to gh-pages
     runs-on: ubuntu-latest
 
     steps:
@@ -17,11 +17,16 @@ jobs:
       - name: Install dependencies
         run: npm install
 
-      - name: Format check
+      - name: Check format
         run: npm run eslint
 
       - name: Run tests
         run: npm run test
 
-      - name: Deploy new version
-        run: npm run deploy
+      - name: Deploy
+        uses: JamesIves/github-pages-deploy-action@4.1.0
+        with:
+          git-config-name: "brtsmrtn"
+          git-config-email: "brtsmrtn@gmail.com"
+          branch: gh-pages # The branch the action should deploy to.
+          folder: build # The folder the action should deploy.
