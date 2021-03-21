@@ -1,7 +1,7 @@
 name: Build and deploy
 
 on:
-  merge:
+  pull_request:
     branches:
       - main
 
