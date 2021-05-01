@@ -1,71 +1,81 @@
+/* eslint-disable @typescript-eslint/explicit-module-boundary-types */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { configureStore } from "@reduxjs/toolkit";
-import { TabType } from "../types/Tab";
+import { ref } from "../FirebaseContext";
+import { FirebaseTabType, TabType } from "../types/Tab";
 import { TagType } from "../types/Tag";
-import {
-  linkBiscuitPrefix,
-  toReadTitle,
-  unreadTitle,
-} from "../utils/constants";
+import { toReadTitle, unreadTitle } from "../utils/constants";
+import { reload } from "./loading";
+import { popSnack } from "./snack";
+
+export const TABS_SET = "TABS_SET";
+export type TabsSetAction = {
+  type: typeof TABS_SET;
+  tabs: TabType[];
+};
+export const tabsSet: (tabs: TabType[]) => TabsSetAction = (tabs) => {
+  return {
+    type: TABS_SET,
+    tabs,
+  };
+};
 
 export const LOAD_TABS = "LOAD_TABS";
 export type LoadTabsAction = {
   type: typeof LOAD_TABS;
+  tabs: TabType[];
 };
-export const loadTabs: () => LoadTabsAction = () => ({ type: LOAD_TABS });
+export const loadTabs: (tabs: TabType[]) => LoadTabsAction = (tabs) => ({
+  type: LOAD_TABS,
+  tabs,
+});
 
-export const ADD_NEW_TAB = "ADD_NEW_TAB";
-export type AddNewTabAction = {
-  type: typeof ADD_NEW_TAB;
+export const TAB_ADDED = "TAB_ADDED";
+export type TabAddedAction = {
+  type: typeof TAB_ADDED;
   tab: TabType;
 };
-export const addNewTab: (tag: TagType) => AddNewTabAction = (tag) => {
-  tabsCounter++;
+export const tabAdded: (tab: TabType) => TabAddedAction = (tab) => {
   return {
-    type: ADD_NEW_TAB,
-    tab: {
-      index: tabsCounter,
-      title: tag.title,
-      predefined: false,
-      coloredWith: tag.color,
-    },
+    type: TAB_ADDED,
+    tab,
   };
 };
 
 export type TabsState = TabType[];
-const initialTabs = [
+export const initialTabs = [
   {
-    index: 0,
+    id: "0",
     title: toReadTitle,
     predefined: true,
-    coloredWith: "",
+    color: "",
   },
   {
-    index: 1,
+    id: "",
     title: unreadTitle,
     predefined: true,
-    coloredWith: "",
+    color: "",
   },
 ];
-export const initialTabsState: TabsState = initialTabs;
-let tabsCounter = Math.max(...initialTabs.map((tab) => tab.index));
-export type TabsActions = AddNewTabAction | LoadTabsAction;
+export const initialTabsState: TabsState = [];
+export type TabsActions = TabAddedAction | LoadTabsAction | TabsSetAction;
 
 export function tabsReducer(
   state = initialTabsState,
   action: TabsActions
 ): TabsState {
   switch (action.type) {
+    case TABS_SET:
+      return action.tabs;
     case LOAD_TABS: {
-      const loadedTabs = localStorage.getItem(`${linkBiscuitPrefix}_tabs`);
-      if (loadedTabs) {
-        const parsedTabs: TabType[] = JSON.parse(loadedTabs);
-        tabsCounter = Math.max(...parsedTabs.map((tab) => tab.index));
-        return parsedTabs;
+      const loadedTabs = [...action.tabs];
+      if (loadedTabs.length) {
+        return loadedTabs;
       } else {
         return initialTabs;
       }
     }
-    case ADD_NEW_TAB: {
+    case TAB_ADDED: {
       return [...state, action.tab];
     }
     default:
@@ -74,3 +84,57 @@ export function tabsReducer(
 }
 
 export const TabsStore = configureStore({ reducer: tabsReducer });
+
+export const addTab = (tag: TagType, uid: string) => (dispatch: any) => {
+  dispatch(reload(true));
+  const itemsRef = ref.child(`users/${uid}/tabs/`);
+  const newTabRef = itemsRef.push();
+  const firebaseTab: any = {
+    title: tag.title,
+    predefined: false,
+    color: tag.color,
+  };
+  newTabRef.set(firebaseTab, (error) => {
+    if (error) {
+      dispatch(popSnack(true, "error"));
+    } else {
+      const storeTab = {
+        id: newTabRef.key,
+        ...firebaseTab,
+      };
+      dispatch(tabAdded(storeTab));
+      dispatch(popSnack(true, "success"));
+    }
+    dispatch(reload(false));
+  });
+};
+
+export const setUser = (uid: string) => (dispatch: any) => {
+  dispatch(reload(true));
+  const itemsRef = ref.child(`users/${uid}/tabs/`);
+  const firebaseTabs: FirebaseTabType[] = [];
+  initialTabs.map((item) => {
+    const newPostKey: any = itemsRef.push().key;
+    firebaseTabs[newPostKey] = {
+      title: item.title,
+      predefined: item.predefined,
+      color: item.color,
+    };
+  });
+  itemsRef.set(firebaseTabs, (error) => {
+    if (error) {
+      dispatch(popSnack(true, "error"));
+    } else {
+      const storeTabs: TabType[] = [];
+      Object.keys(firebaseTabs).forEach((k: any) => {
+        storeTabs.push({
+          id: k,
+          ...firebaseTabs[k],
+        });
+      });
+      dispatch(tabsSet(storeTabs));
+      dispatch(popSnack(true, "success"));
+    }
+    dispatch(reload(false));
+  });
+};

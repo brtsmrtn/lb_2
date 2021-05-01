@@ -5,4 +5,7 @@ export type ItemType = {
   date: string;
   alreadyRead: boolean;
   tags: TagType[];
+  itemBeingAdded?: boolean;
+  itemBeingSaved?: boolean;
+  itemSaved?: boolean;
 };

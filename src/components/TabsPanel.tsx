@@ -1,7 +1,6 @@
 import React from "react";
 import { Tab, Tabs } from "@material-ui/core";
 import { makeStyles, Theme } from "@material-ui/core/styles";
-import { COLORS } from "../utils/constants";
 import { Link, useParams } from "react-router-dom";
 import { TabType } from "../types/Tab";
 import { TabsContent } from "./TabsContent";
@@ -59,89 +58,89 @@ const useStyles = makeStyles((theme: Theme) => ({
       "& .MuiButtonBase-root:nth-child(2)": {
         backgroundColor: "rgba(255, 255, 255, 1)",
       },
-      "& .MuiButtonBase-root.chip-1": {
-        background: `linear-gradient(90deg, rgba(255,255,255,0.5) 25%, ${COLORS[0]} 100%)`,
+      "& .MuiButtonBase-root.chip-b3e5fc": {
+        background: `linear-gradient(90deg, rgba(255,255,255,0.5) 25%, #b3e5fc 100%)`,
       },
-      "& .MuiButtonBase-root.chip-1:hover": {
-        background: `linear-gradient(90deg, rgba(255,255,255,0.25) 0%, ${COLORS[0]} 10%)`,
+      "& .MuiButtonBase-root.chip-b3e5fc:hover": {
+        background: `linear-gradient(90deg, rgba(255,255,255,0.25) 0%, #b3e5fc 10%)`,
       },
-      "& .MuiButtonBase-root.chip-2": {
-        background: `linear-gradient(90deg, rgba(255,255,255,0.5) 25%, ${COLORS[1]} 100%)`,
+      "& .MuiButtonBase-root.chip-ffcdd2": {
+        background: `linear-gradient(90deg, rgba(255,255,255,0.5) 25%, #ffcdd2 100%)`,
       },
-      "& .MuiButtonBase-root.chip-2:hover": {
-        background: `linear-gradient(90deg, rgba(255,255,255,0.25) 0%, ${COLORS[1]} 10%)`,
+      "& .MuiButtonBase-root.chip-ffcdd2:hover": {
+        background: `linear-gradient(90deg, rgba(255,255,255,0.25) 0%, #ffcdd2 10%)`,
       },
-      "& .MuiButtonBase-root.chip-3": {
-        background: `linear-gradient(90deg, rgba(255,255,255,0.5) 25%, ${COLORS[2]} 100%)`,
+      "& .MuiButtonBase-root.chip-dcedc8": {
+        background: `linear-gradient(90deg, rgba(255,255,255,0.5) 25%, #dcedc8 100%)`,
       },
-      "& .MuiButtonBase-root.chip-3:hover": {
-        background: `linear-gradient(90deg, rgba(255,255,255,0.25) 0%, ${COLORS[2]} 10%)`,
+      "& .MuiButtonBase-root.chip-dcedc8:hover": {
+        background: `linear-gradient(90deg, rgba(255,255,255,0.25) 0%, #dcedc8 10%)`,
       },
-      "& .MuiButtonBase-root.chip-4": {
-        background: `linear-gradient(90deg, rgba(255,255,255,0.5) 25%, ${COLORS[3]} 100%)`,
+      "& .MuiButtonBase-root.chip-c5cae9": {
+        background: `linear-gradient(90deg, rgba(255,255,255,0.5) 25%, #c5cae9 100%)`,
       },
-      "& .MuiButtonBase-root.chip-4:hover": {
-        background: `linear-gradient(90deg, rgba(255,255,255,0.25) 0%, ${COLORS[3]} 10%)`,
+      "& .MuiButtonBase-root.chip-c5cae9:hover": {
+        background: `linear-gradient(90deg, rgba(255,255,255,0.25) 0%, #c5cae9 10%)`,
       },
-      "& .MuiButtonBase-root.chip-5": {
-        background: `linear-gradient(90deg, rgba(255,255,255,0.5) 25%, ${COLORS[4]} 100%)`,
+      "& .MuiButtonBase-root.chip-cfd8dc": {
+        background: `linear-gradient(90deg, rgba(255,255,255,0.5) 25%, #cfd8dc 100%)`,
       },
-      "& .MuiButtonBase-root.chip-5:hover": {
-        background: `linear-gradient(90deg, rgba(255,255,255,0.25) 0%, ${COLORS[4]} 10%)`,
+      "& .MuiButtonBase-root.chip-cfd8dc:hover": {
+        background: `linear-gradient(90deg, rgba(255,255,255,0.25) 0%, #cfd8dc 10%)`,
       },
-      "& .MuiButtonBase-root.chip-6": {
-        background: `linear-gradient(90deg, rgba(255,255,255,0.5) 25%, ${COLORS[5]} 100%)`,
+      "& .MuiButtonBase-root.chip-fff9c4": {
+        background: `linear-gradient(90deg, rgba(255,255,255,0.5) 25%, #fff9c4 100%)`,
       },
-      "& .MuiButtonBase-root.chip-6:hover": {
-        background: `linear-gradient(90deg, rgba(255,255,255,0.25) 0%, ${COLORS[5]} 10%)`,
+      "& .MuiButtonBase-root.chip-fff9c4:hover": {
+        background: `linear-gradient(90deg, rgba(255,255,255,0.25) 0%, #fff9c4 10%)`,
       },
-      "& .MuiButtonBase-root.chip-7": {
-        background: `linear-gradient(90deg, rgba(255,255,255,0.5) 25%, ${COLORS[6]} 100%)`,
+      "& .MuiButtonBase-root.chip-d1c4e9": {
+        background: `linear-gradient(90deg, rgba(255,255,255,0.5) 25%, #d1c4e9 100%)`,
       },
-      "& .MuiButtonBase-root.chip-7:hover": {
-        background: `linear-gradient(90deg, rgba(255,255,255,0.25) 0%, ${COLORS[6]} 10%)`,
+      "& .MuiButtonBase-root.chip-d1c4e9:hover": {
+        background: `linear-gradient(90deg, rgba(255,255,255,0.25) 0%, #d1c4e9 10%)`,
       },
-      "& .MuiButtonBase-root.chip-8": {
-        background: `linear-gradient(90deg, rgba(255,255,255,0.5) 25%, ${COLORS[7]} 100%)`,
+      "& .MuiButtonBase-root.chip-ffccbc": {
+        background: `linear-gradient(90deg, rgba(255,255,255,0.5) 25%, #ffccbc 100%)`,
       },
-      "& .MuiButtonBase-root.chip-8:hover": {
-        background: `linear-gradient(90deg, rgba(255,255,255,0.25) 0%, ${COLORS[7]} 10%)`,
+      "& .MuiButtonBase-root.chip-ffccbc:hover": {
+        background: `linear-gradient(90deg, rgba(255,255,255,0.25) 0%, #ffccbc 10%)`,
       },
-      "& .MuiButtonBase-root.chip-9": {
-        background: `linear-gradient(90deg, rgba(255,255,255,0.5) 25%, ${COLORS[8]} 100%)`,
+      "& .MuiButtonBase-root.chip-f0f4c3": {
+        background: `linear-gradient(90deg, rgba(255,255,255,0.5) 25%, #f0f4c3 100%)`,
       },
-      "& .MuiButtonBase-root.chip-9:hover": {
-        background: `linear-gradient(90deg, rgba(255,255,255,0.25) 0%, ${COLORS[8]} 10%)`,
+      "& .MuiButtonBase-root.chip-f0f4c3:hover": {
+        background: `linear-gradient(90deg, rgba(255,255,255,0.25) 0%, #f0f4c3 10%)`,
       },
-      "& .MuiButtonBase-root.chip-10": {
-        background: `linear-gradient(90deg, rgba(255,255,255,0.5) 25%, ${COLORS[9]} 100%)`,
+      "& .MuiButtonBase-root.chip-b2ebf2": {
+        background: `linear-gradient(90deg, rgba(255,255,255,0.5) 25%, #b2ebf2 100%)`,
       },
-      "& .MuiButtonBase-root.chip-10:hover": {
-        background: `linear-gradient(90deg, rgba(255,255,255,0.25) 0%, ${COLORS[9]} 10%)`,
+      "& .MuiButtonBase-root.chip-b2ebf2:hover": {
+        background: `linear-gradient(90deg, rgba(255,255,255,0.25) 0%, #b2ebf2 10%)`,
       },
-      "& .MuiButtonBase-root.chip-11": {
-        background: `linear-gradient(90deg, rgba(255,255,255,0.5) 25%, ${COLORS[10]} 100%)`,
+      "& .MuiButtonBase-root.chip-d7ccc8": {
+        background: `linear-gradient(90deg, rgba(255,255,255,0.5) 25%, #d7ccc8 100%)`,
       },
-      "& .MuiButtonBase-root.chip-11:hover": {
-        background: `linear-gradient(90deg, rgba(255,255,255,0.25) 0%, ${COLORS[10]} 10%)`,
+      "& .MuiButtonBase-root.chip-d7ccc8:hover": {
+        background: `linear-gradient(90deg, rgba(255,255,255,0.25) 0%, #d7ccc8 10%)`,
       },
-      "& .MuiButtonBase-root.chip-12": {
-        background: `linear-gradient(90deg, rgba(255,255,255,0.5) 25%, ${COLORS[11]} 100%)`,
+      "& .MuiButtonBase-root.chip-ffecb3": {
+        background: `linear-gradient(90deg, rgba(255,255,255,0.5) 25%, #ffecb3 100%)`,
       },
-      "& .MuiButtonBase-root.chip-12:hover": {
-        background: `linear-gradient(90deg, rgba(255,255,255,0.25) 0%, ${COLORS[11]} 10%)`,
+      "& .MuiButtonBase-root.chip-ffecb3:hover": {
+        background: `linear-gradient(90deg, rgba(255,255,255,0.25) 0%, #ffecb3 10%)`,
       },
-      "& .MuiButtonBase-root.chip-13": {
-        background: `linear-gradient(90deg, rgba(255,255,255,0.5) 25%, ${COLORS[12]} 100%)`,
+      "& .MuiButtonBase-root.chip-f8bbd0": {
+        background: `linear-gradient(90deg, rgba(255,255,255,0.5) 25%, #f8bbd0 100%)`,
       },
-      "& .MuiButtonBase-root.chip-13:hover": {
-        background: `linear-gradient(90deg, rgba(255,255,255,0.25) 0%, ${COLORS[12]} 10%)`,
+      "& .MuiButtonBase-root.chip-f8bbd0:hover": {
+        background: `linear-gradient(90deg, rgba(255,255,255,0.25) 0%, #f8bbd0 10%)`,
       },
-      "& .MuiButtonBase-root.chip-14": {
-        background: `linear-gradient(90deg, rgba(255,255,255,0.5) 25%, ${COLORS[13]} 100%)`,
+      "& .MuiButtonBase-root.chip-b2dfdb": {
+        background: `linear-gradient(90deg, rgba(255,255,255,0.5) 25%, #b2dfdb 100%)`,
       },
-      "& .MuiButtonBase-root.chip-14:hover": {
-        background: `linear-gradient(90deg, rgba(255,255,255,0.25) 0%, ${COLORS[13]} 10%)`,
+      "& .MuiButtonBase-root.chip-b2dfdb:hover": {
+        background: `linear-gradient(90deg, rgba(255,255,255,0.25) 0%, #b2dfdb 10%)`,
       },
     },
   },
@@ -152,7 +151,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   tab: {
     opacity: 1,
-    background: `linear-gradient(90deg, rgba(255,255,255,0.5) 25%, ${COLORS[14]} 100%)`,
+    background: `linear-gradient(90deg, rgba(255,255,255,0.5) 25%, #f5f5f5 100%)`,
     width: 200,
     alignContent: "flex-end",
     alignSelf: "flex-end",
@@ -162,10 +161,10 @@ const useStyles = makeStyles((theme: Theme) => ({
     textAlign: "right",
     textTransform: "none",
     "&:focus": {
-      background: `linear-gradient(90deg, rgba(255,255,255,0) 0%, ${COLORS[14]} 10%)`,
+      background: `linear-gradient(90deg, rgba(255,255,255,0) 0%, #f5f5f5 10%)`,
     },
     "&:hover": {
-      background: `linear-gradient(90deg, rgba(255,255,255,0.25) 0%, ${COLORS[14]} 10%)`,
+      background: `linear-gradient(90deg, rgba(255,255,255,0.25) 0%, #f5f5f5 10%)`,
       opacity: 1,
     },
     // "&$selected": {
@@ -188,13 +187,13 @@ export const TabsPanel: (props: TabsPanelProps) => JSX.Element = ({
   const { tabName } = useParams<{ tabName: string }>();
   const selectedTabTitle = decodeURIComponent(tabName).replace("_", " ");
   const selectedTab = displayTabs.find((tab) => tab.title === selectedTabTitle);
-  const selectedTabIndex = selectedTab ? selectedTab.index : 0;
+  const selectedTabId = selectedTab ? selectedTab.id : displayTabs[0].id;
   return (
     <div className={classes.root}>
       <Tabs
         orientation="vertical"
         variant="scrollable"
-        value={selectedTabIndex}
+        value={selectedTabId}
         aria-label="Tabs"
         indicatorColor="primary"
         className={classes.tabs}
@@ -202,28 +201,25 @@ export const TabsPanel: (props: TabsPanelProps) => JSX.Element = ({
         {displayTabs.map((tab) => {
           if (tab) {
             let className = classes.tab;
-            if (tab.coloredWith) {
-              className += ` chip-${tab.index - 1}`;
+            if (tab.color) {
+              className += ` chip-${tab.color.substring(1)}`;
             }
             return (
               <Tab
-                key={tab.index}
+                key={tab.id}
                 component={Link}
                 to={`/${tab.title.replace(" ", "_")}`}
                 label={`${tab.title}`}
-                value={tab.index}
-                id={`vertical-tab-${tab.index}`}
-                aria-controls={`vertical-tabpanel-${tab.index}`}
+                value={tab.id}
+                id={`vertical-tab-${tab.id}`}
+                aria-controls={`vertical-tabpanel-${tab.id}`}
                 className={className}
               />
             );
           }
         })}
       </Tabs>
-      <TabsContent
-        displayTabs={displayTabs}
-        selectedTabIndex={selectedTabIndex}
-      />
+      <TabsContent displayTabs={displayTabs} selectedTabIndex={selectedTabId} />
     </div>
   );
 };

@@ -15,8 +15,7 @@ import {
   DialogContentText,
 } from "@material-ui/core";
 import { addKnownTag } from "../features/tags";
-import { assignTagToItem } from "../features/items";
-import { addNewTab } from "../features/tabs";
+import { assignTag } from "../features/items";
 
 export type TagButtonProps = {
   item: ItemType;
@@ -25,7 +24,9 @@ export const TagButton: (props: TagButtonProps) => JSX.Element = ({
   item,
 }: TagButtonProps) => {
   const dispatch = useDispatch();
-  const knownTags = useSelector((state: ApplicationState) => state.knownTags);
+  const { userData, knownTags } = useSelector(
+    (state: ApplicationState) => state
+  );
   const [dialogOpen, setDialogOpen] = useState(false);
   const [errorTag, setErrorTag] = useState<ErrorTagMessage>(undefined);
   const isTagNew = (tagTitle: string, tags: TagType[]) =>
@@ -41,7 +42,7 @@ export const TagButton: (props: TagButtonProps) => JSX.Element = ({
       if (tagAlreadyAssigned) {
         setErrorTag(errorTags.submit);
       } else {
-        dispatch(assignTagToItem(targetTag, item));
+        dispatch(assignTag(targetTag, item, userData.user.uid));
         setErrorTag(errorTags.empty);
       }
     }
@@ -74,19 +75,13 @@ export const TagButton: (props: TagButtonProps) => JSX.Element = ({
       const tagAlreadyKnown = isTagNew(tagTitle, knownTags);
       if (!tagAlreadyAssigned) {
         if (tagAlreadyKnown) {
-          dispatch(assignTagToItem(tagAlreadyKnown, item));
+          dispatch(assignTag(tagAlreadyKnown, item, userData.user.uid));
           setErrorTag(errorTags.empty);
         } else {
-          const updateKnownTagsAction = addKnownTag(tagTitle);
-          dispatch(updateKnownTagsAction);
-          const tagAlreadyAssigned = isTagNew(tagTitle, item.tags);
-          if (tagAlreadyAssigned) {
-            setErrorTag(errorTags.assigned);
-          } else {
-            dispatch(addNewTab(updateKnownTagsAction.tag));
-            dispatch(assignTagToItem(updateKnownTagsAction.tag, item));
-            setErrorTag(errorTags.empty);
-          }
+          dispatch(
+            addKnownTag(tagTitle, userData.user.uid, item, knownTags.length)
+          );
+          setErrorTag(errorTags.empty);
         }
       }
     }

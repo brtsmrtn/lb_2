@@ -5,12 +5,14 @@ import { Button } from "@material-ui/core";
 import { maxLinkLength } from "../utils/constants";
 import { useDispatch, useSelector } from "react-redux";
 import { ApplicationState } from "../app/store";
-import { addNewItem } from "../features/items";
+import { addItem } from "../features/items";
 import { setUrl } from "../features/urlInput";
 
 export const SubmitLink: () => JSX.Element = () => {
   const dispatch = useDispatch();
-  const { items, urlInput } = useSelector((state: ApplicationState) => state);
+  const { userData, items, urlInput } = useSelector(
+    (state: ApplicationState) => state
+  );
   return (
     <Button
       variant="outlined"
@@ -21,7 +23,7 @@ export const SubmitLink: () => JSX.Element = () => {
         urlInput.length >= maxLinkLength
       }
       onClick={() => {
-        dispatch(addNewItem(urlInput));
+        dispatch(addItem(userData.user.uid, urlInput));
         dispatch(setUrl(""));
       }}
     >

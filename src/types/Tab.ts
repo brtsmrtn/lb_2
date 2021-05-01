@@ -1,6 +1,9 @@
-export type TabType = {
-  index: number;
+export type FirebaseTabType = {
   title: string;
   predefined: boolean;
-  coloredWith: string;
+  color: string;
 };
+
+export type TabType = {
+  id: string;
+} & FirebaseTabType;
