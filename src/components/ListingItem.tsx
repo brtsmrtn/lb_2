@@ -1,19 +1,21 @@
 import React from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { Button } from "@material-ui/core";
-import { ItemType } from "../types/ListItem";
+import { Item } from "../types/ListItem";
 import { TagButton } from "./TagButton";
 import TagList from "./TagList";
-import { toggleItemStatus, deleteItem } from "../features/items";
+import { deleteItem, toggleItem } from "../features/items";
+import { ApplicationState } from "../app/store";
 
 type ListingItemProps = {
-  item: ItemType;
+  item: Item;
 };
 
 export const ListingItem: (props: ListingItemProps) => JSX.Element = ({
   item,
 }: ListingItemProps) => {
   const dispatch = useDispatch();
+  const { userData } = useSelector((state: ApplicationState) => state);
   return (
     <tr>
       <td>{item.url}</td>
@@ -23,7 +25,7 @@ export const ListingItem: (props: ListingItemProps) => JSX.Element = ({
           variant="outlined"
           color="primary"
           onClick={() => {
-            dispatch(toggleItemStatus(item));
+            dispatch(toggleItem(userData.user.uid, item));
           }}
         >
           {item.alreadyRead ? "Unread" : "Read"}
@@ -34,10 +36,10 @@ export const ListingItem: (props: ListingItemProps) => JSX.Element = ({
           variant="outlined"
           color="primary"
           onClick={() => {
-            dispatch(deleteItem(item));
+            dispatch(deleteItem(userData.user.uid, item));
           }}
         >
-          DELEte
+          DELETE
         </Button>
       </td>
       <td>

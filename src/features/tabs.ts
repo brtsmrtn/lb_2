@@ -1,71 +1,83 @@
+/* eslint-disable @typescript-eslint/explicit-module-boundary-types */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { configureStore } from "@reduxjs/toolkit";
-import { TabType } from "../types/Tab";
-import { TagType } from "../types/Tag";
-import {
-  linkBiscuitPrefix,
-  toReadTitle,
-  unreadTitle,
-} from "../utils/constants";
+import { ref } from "../FirebaseContext";
+import { Tab } from "../types/Tab";
+import { Tag } from "../types/Tag";
+import { toReadTitle, unreadTitle } from "../utils/constants";
+import { reload } from "./loading";
+import { popSnack } from "./snack";
+
+export const TABS_SET = "TABS_SET";
+export type TabsSetAction = {
+  type: typeof TABS_SET;
+  tabs: Tab[];
+};
+export const tabsSet: (tabs: Tab[]) => TabsSetAction = (tabs) => {
+  return {
+    type: TABS_SET,
+    tabs,
+  };
+};
 
 export const LOAD_TABS = "LOAD_TABS";
 export type LoadTabsAction = {
   type: typeof LOAD_TABS;
+  tabs: Tab[];
 };
-export const loadTabs: () => LoadTabsAction = () => ({ type: LOAD_TABS });
+export const loadTabs: (tabs: Tab[]) => LoadTabsAction = (tabs) => ({
+  type: LOAD_TABS,
+  tabs,
+});
 
-export const ADD_NEW_TAB = "ADD_NEW_TAB";
-export type AddNewTabAction = {
-  type: typeof ADD_NEW_TAB;
-  tab: TabType;
+export const TAB_ADDED = "TAB_ADDED";
+export type TabAddedAction = {
+  type: typeof TAB_ADDED;
+  tab: Tab;
 };
-export const addNewTab: (tag: TagType) => AddNewTabAction = (tag) => {
-  tabsCounter++;
+export const tabAdded: (tab: Tab) => TabAddedAction = (tab) => {
   return {
-    type: ADD_NEW_TAB,
-    tab: {
-      index: tabsCounter,
-      title: tag.title,
-      predefined: false,
-      coloredWith: tag.color,
-    },
+    type: TAB_ADDED,
+    tab,
   };
 };
 
-export type TabsState = TabType[];
-const initialTabs = [
+export type TabsState = Tab[];
+export const initialTabs = [
   {
-    index: 0,
+    id: "0",
     title: toReadTitle,
+    url: "/" + toReadTitle.replace(" ", "_"),
     predefined: true,
-    coloredWith: "",
+    color: "",
   },
   {
-    index: 1,
+    id: "1",
     title: unreadTitle,
+    url: "/" + unreadTitle.replace(" ", "_"),
     predefined: true,
-    coloredWith: "",
+    color: "",
   },
 ];
-export const initialTabsState: TabsState = initialTabs;
-let tabsCounter = Math.max(...initialTabs.map((tab) => tab.index));
-export type TabsActions = AddNewTabAction | LoadTabsAction;
+export const initialTabsState: TabsState = [];
+export type TabsActions = TabAddedAction | LoadTabsAction | TabsSetAction;
 
 export function tabsReducer(
   state = initialTabsState,
   action: TabsActions
 ): TabsState {
   switch (action.type) {
+    case TABS_SET:
+      return action.tabs;
     case LOAD_TABS: {
-      const loadedTabs = localStorage.getItem(`${linkBiscuitPrefix}_tabs`);
-      if (loadedTabs) {
-        const parsedTabs: TabType[] = JSON.parse(loadedTabs);
-        tabsCounter = Math.max(...parsedTabs.map((tab) => tab.index));
-        return parsedTabs;
+      const loadedTabs = [...action.tabs];
+      if (loadedTabs.length) {
+        return loadedTabs;
       } else {
         return initialTabs;
       }
     }
-    case ADD_NEW_TAB: {
+    case TAB_ADDED: {
       return [...state, action.tab];
     }
     default:
@@ -74,3 +86,28 @@ export function tabsReducer(
 }
 
 export const TabsStore = configureStore({ reducer: tabsReducer });
+
+export const addTab = (tag: Tag, uid: string) => (dispatch: any) => {
+  dispatch(reload());
+  const itemsRef = ref.child(`users/${uid}/tabs/`);
+  const newTabRef = itemsRef.push();
+  const firebaseTab: any = {
+    title: tag.title,
+    url: "/" + tag.title.replace(" ", "_"),
+    predefined: false,
+    color: tag.color,
+  };
+  newTabRef.set(firebaseTab, (error) => {
+    if (error) {
+      dispatch(popSnack(true, "error"));
+    } else {
+      const storeTab = {
+        id: newTabRef.key,
+        ...firebaseTab,
+      };
+      dispatch(tabAdded(storeTab));
+      dispatch(popSnack(true, "success"));
+    }
+    dispatch(reload());
+  });
+};

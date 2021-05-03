@@ -9,19 +9,24 @@ export const Message: () => JSX.Element = () => {
   if (errorMessage) {
     return <p>▶ {errorMessage}</p>;
   } else {
-    if (items.length) {
+    const unreadItems = items.filter((item) => !item.alreadyRead);
+    if (unreadItems.length) {
       return (
         <p>
-          ▶ Wanna read something? You've got {items.length} link{""}
-          {items.length === 1 ? "" : "s"} here.
+          ▶ Wanna read something? You've got {unreadItems.length} link{""}
+          {unreadItems.length === 1 ? "" : "s"} here.
         </p>
       );
     } else {
-      return (
-        <p>
-          ▶ Start with adding <i>http(s)</i> link in the field above.
-        </p>
-      );
+      if (items.length) {
+        return <p>▶ You read everything. Great!</p>;
+      } else {
+        return (
+          <p>
+            ▶ Start with adding <i>http(s)</i> link in the field above.
+          </p>
+        );
+      }
     }
   }
 };

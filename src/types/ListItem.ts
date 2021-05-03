@@ -1,8 +1,11 @@
-import { TagType } from "./Tag";
-export type ItemType = {
+import { Tag } from "./Tag";
+export type Item = {
   id: string;
   url: string;
   date: string;
   alreadyRead: boolean;
-  tags: TagType[];
+  tags: Tag[];
+  itemBeingAdded?: boolean;
+  itemBeingSaved?: boolean;
+  itemSaved?: boolean;
 };
