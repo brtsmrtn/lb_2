@@ -1,4 +1,4 @@
-export type UserDataType = {
+export type UserData = {
   isLoggingIn: boolean;
   isLoggingOut: boolean;
   isVerifying: boolean;
@@ -6,10 +6,10 @@ export type UserDataType = {
   logoutError: boolean;
   isAuthenticated: boolean;
   verifyingError: boolean;
-  user: UserType;
+  user: User;
 };
 
-export type UserType = {
+export type User = {
   uid: string;
   name: string;
 };

@@ -2,22 +2,20 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { configureStore } from "@reduxjs/toolkit";
 import { ref } from "../FirebaseContext";
-import { TagType } from "../types/Tag";
+import { Tag } from "../types/Tag";
 import { COLORS } from "../utils/constants";
 import { reload } from "./loading";
 import { popSnack } from "./snack";
-import { ItemType } from "../types/ListItem";
+import { Item } from "../types/ListItem";
 import { assignTag } from "./items";
 import { addTab } from "./tabs";
 
 export const LOAD_KNOWN_TAGS = "LOAD_KNOWN_TAGS";
 export type LoadKnownTagsAction = {
   type: typeof LOAD_KNOWN_TAGS;
-  tags: TagType[];
+  tags: Tag[];
 };
-export const loadKnownTags: (tags: TagType[]) => LoadKnownTagsAction = (
-  tags
-) => ({
+export const loadKnownTags: (tags: Tag[]) => LoadKnownTagsAction = (tags) => ({
   type: LOAD_KNOWN_TAGS,
   tags,
 });
@@ -25,16 +23,16 @@ export const loadKnownTags: (tags: TagType[]) => LoadKnownTagsAction = (
 export const KNOWN_TAG_ADDED = "KNOWN_TAG_ADDED";
 export type KnownTagAddedAction = {
   type: typeof KNOWN_TAG_ADDED;
-  tag: TagType;
+  tag: Tag;
 };
-export const knownTagAdded: (tag: TagType) => KnownTagAddedAction = (tag) => {
+export const knownTagAdded: (tag: Tag) => KnownTagAddedAction = (tag) => {
   return {
     type: KNOWN_TAG_ADDED,
     tag,
   };
 };
 
-export type KnownTagsState = TagType[];
+export type KnownTagsState = Tag[];
 const initialKnownTagsState: KnownTagsState = [];
 
 export type KnownTagsActions = KnownTagAddedAction | LoadKnownTagsAction;
@@ -61,10 +59,10 @@ export const TagsStore = configureStore({ reducer: knownTagsReducer });
 export const addKnownTag = (
   tagTitle: string,
   uid: string,
-  item: ItemType,
+  item: Item,
   knownTagsLength: number
 ) => (dispatch: any) => {
-  dispatch(reload(true));
+  dispatch(reload());
   const itemsRef = ref.child(`users/${uid}/knownTags`);
   const newTagRef = itemsRef.push();
   const firebaseTag: any = {
@@ -89,6 +87,6 @@ export const addKnownTag = (
       dispatch(addTab(storeKnownTag, uid));
       dispatch(popSnack(true, "success"));
     }
-    dispatch(reload(false));
+    dispatch(reload());
   });
 };

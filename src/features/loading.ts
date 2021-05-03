@@ -3,15 +3,13 @@ import { configureStore } from "@reduxjs/toolkit";
 export const LOADING = "LOADING";
 export type LoadingAction = {
   type: typeof LOADING;
-  load: boolean;
 };
-export const reload: (load: boolean) => LoadingAction = (load) => ({
+export const reload: () => LoadingAction = () => ({
   type: LOADING,
-  load,
 });
 
-export type LoadingState = { load: boolean };
-const initialLoadingState: LoadingState = { load: true };
+export type LoadingState = { isVisible: boolean };
+const initialLoadingState: LoadingState = { isVisible: true };
 
 export type LoadingActions = LoadingAction;
 
@@ -21,7 +19,10 @@ export function loadingReducer(
 ): LoadingState {
   switch (action.type) {
     case LOADING:
-      return { load: action.load };
+      return {
+        ...state,
+        isVisible: !state.isVisible,
+      };
     default:
       return state;
   }

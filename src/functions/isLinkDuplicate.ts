@@ -1,5 +1,5 @@
-import { ItemType } from "../types/ListItem";
+import { Item } from "../types/ListItem";
 
-export function isLinkDuplicate(url: string, items: ItemType[]): boolean {
+export function isLinkDuplicate(url: string, items: Item[]): boolean {
   return !!items.find((item) => item.url === url);
 }

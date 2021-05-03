@@ -2,8 +2,8 @@ import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import Autocomplete from "@material-ui/lab/Autocomplete";
 import { ApplicationState } from "../app/store";
-import { ItemType } from "../types/ListItem";
-import { TagType } from "../types/Tag";
+import { Item } from "../types/ListItem";
+import { Tag } from "../types/Tag";
 import TagList from "./TagList";
 import { errorTags, ErrorTagMessage } from "../functions/errorMessages";
 import {
@@ -18,7 +18,7 @@ import { addKnownTag } from "../features/tags";
 import { assignTag } from "../features/items";
 
 export type TagButtonProps = {
-  item: ItemType;
+  item: Item;
 };
 export const TagButton: (props: TagButtonProps) => JSX.Element = ({
   item,
@@ -29,13 +29,9 @@ export const TagButton: (props: TagButtonProps) => JSX.Element = ({
   );
   const [dialogOpen, setDialogOpen] = useState(false);
   const [errorTag, setErrorTag] = useState<ErrorTagMessage>(undefined);
-  const isTagNew = (tagTitle: string, tags: TagType[]) =>
+  const isTagNew = (tagTitle: string, tags: Tag[]) =>
     tags.find((tag) => tag.title === tagTitle);
-  const onChangeAutocomplete = (
-    tag: TagType[],
-    reason: string,
-    item: ItemType
-  ) => {
+  const onChangeAutocomplete = (tag: Tag[], reason: string, item: Item) => {
     const targetTag = tag[tag.length - 1];
     if (reason === "select-option") {
       const tagAlreadyAssigned = isTagNew(targetTag.title, item.tags);
@@ -49,7 +45,7 @@ export const TagButton: (props: TagButtonProps) => JSX.Element = ({
   };
   const onChangeTextField = (
     e: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>,
-    item: ItemType
+    item: Item
   ) => {
     const targetTag = e.target as HTMLTextAreaElement;
     const tagTitle = targetTag.value;
@@ -66,7 +62,7 @@ export const TagButton: (props: TagButtonProps) => JSX.Element = ({
   };
   const onKeyDownTextField = (
     e: React.KeyboardEvent<HTMLDivElement>,
-    item: ItemType
+    item: Item
   ) => {
     const tag = e.target as HTMLTextAreaElement;
     const tagTitle = tag.value;
@@ -132,7 +128,7 @@ export const TagButton: (props: TagButtonProps) => JSX.Element = ({
             filterSelectedOptions
             selectOnFocus
             autoComplete
-            onChange={(_, value: TagType[] | undefined, reason) => {
+            onChange={(_, value: Tag[] | undefined, reason) => {
               if (value) {
                 onChangeAutocomplete(value, reason, item);
               }

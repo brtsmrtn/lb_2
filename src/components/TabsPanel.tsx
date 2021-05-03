@@ -2,7 +2,7 @@ import React from "react";
 import { Tab, Tabs } from "@material-ui/core";
 import { makeStyles, Theme } from "@material-ui/core/styles";
 import { Link, useParams } from "react-router-dom";
-import { TabType } from "../types/Tab";
+import { Tab as TabType } from "../types/Tab";
 import { TabsContent } from "./TabsContent";
 
 const useStyles = makeStyles((theme: Theme) => ({

@@ -2,13 +2,14 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { configureStore } from "@reduxjs/toolkit";
 import firebase, { provider, ref } from "../FirebaseContext";
-import { ItemType } from "../types/ListItem";
-import { TabType } from "../types/Tab";
-import { TagType } from "../types/Tag";
-import { UserDataType, UserType } from "../types/User";
+import { Item } from "../types/ListItem";
+import { FirebaseTab, Tab } from "../types/Tab";
+import { Tag } from "../types/Tag";
+import { UserData, User } from "../types/User";
 import { loadItems } from "./items";
 import { reload } from "./loading";
-import { loadTabs, setUser } from "./tabs";
+import { popSnack } from "./snack";
+import { initialTabs, loadTabs, tabsSet } from "./tabs";
 import { loadKnownTags } from "./tags";
 
 export const LOGIN_REQUEST = "LOGIN_REQUEST";
@@ -24,9 +25,9 @@ export const loginRequest: () => LoginRequestAction = () => {
 export const LOGIN_SUCCESS = "LOGIN_SUCCESS";
 export type LoginSuccessAction = {
   type: typeof LOGIN_SUCCESS;
-  user: UserType;
+  user: User;
 };
-export const loginSuccess: (user: UserType) => LoginSuccessAction = (user) => {
+export const loginSuccess: (user: User) => LoginSuccessAction = (user) => {
   return {
     type: LOGIN_SUCCESS,
     user,
@@ -93,7 +94,7 @@ export const verifySuccess: () => VerifySuccessAction = () => {
   };
 };
 
-export type UserState = UserDataType;
+export type UserState = UserData;
 const initialUserState: UserState = {
   isLoggingIn: false,
   isLoggingOut: false,
@@ -198,6 +199,7 @@ export const logoutUser = () => (dispatch: any) => {
     .auth()
     .signOut()
     .then(() => {
+      dispatch(reload());
       dispatch(logoutSuccess());
     })
     .catch(() => {
@@ -216,10 +218,13 @@ export const verifyAuth = () => (dispatch: any) => {
   });
 };
 
-export const loadData = (user: UserType) => (dispatch: any) => {
-  const FirebaseItems: ItemType[] = [];
-  const FirebaseTags: TagType[] = [];
-  const FirebaseTabs: TabType[] = [];
+export const loadData = (user: User) => (dispatch: any) => {
+  const FirebaseItems: Item[] = [];
+  const FirebaseTags: Tag[] = [];
+  const FirebaseTabs: Tab[] = [];
+  ref.child(`users/${user.uid}/`).on("child_added", (x) => {
+    console.log(x);
+  });
   ref.child(`users/${user.uid}/`).once("value", (snapshot) => {
     if (snapshot.exists()) {
       if (snapshot.val().constructor.name === "Object") {
@@ -228,7 +233,7 @@ export const loadData = (user: UserType) => (dispatch: any) => {
           if (node) {
             Object.keys(node).forEach((y, z) => {
               if (i === "items") {
-                const itemTags: TagType[] = [];
+                const itemTags: Tag[] = [];
                 const itemTagNode = Object.keys(node[y]).findIndex(
                   (k) => k === "tags"
                 );
@@ -262,6 +267,8 @@ export const loadData = (user: UserType) => (dispatch: any) => {
             });
           }
         });
+      } else {
+        console.log(snapshot.val());
       }
       dispatch(loadItems(FirebaseItems));
       dispatch(loadKnownTags(FirebaseTags));
@@ -269,6 +276,37 @@ export const loadData = (user: UserType) => (dispatch: any) => {
     } else {
       dispatch(setUser(user.uid));
     }
-    dispatch(reload(false));
+    dispatch(reload());
+  });
+};
+
+export const setUser = (uid: string) => (dispatch: any) => {
+  dispatch(reload());
+  const itemsRef = ref.child(`users/${uid}/tabs/`);
+  const firebaseTabs: FirebaseTab[] = [];
+  initialTabs.map((tab) => {
+    const newPostKey: any = itemsRef.push().key;
+    firebaseTabs[newPostKey] = {
+      title: tab.title,
+      url: tab.url,
+      predefined: tab.predefined,
+      color: tab.color,
+    };
+  });
+  itemsRef.set(firebaseTabs, (error) => {
+    if (error) {
+      dispatch(popSnack(true, "error"));
+    } else {
+      const storeTabs: Tab[] = [];
+      Object.keys(firebaseTabs).forEach((tab: any) => {
+        storeTabs.push({
+          id: tab,
+          ...firebaseTabs[tab],
+        });
+      });
+      dispatch(tabsSet(storeTabs));
+      dispatch(popSnack(true, "success"));
+    }
+    dispatch(reload());
   });
 };

@@ -2,12 +2,12 @@ import React from "react";
 import { ListingItem } from "./ListingItem";
 import { useSelector } from "react-redux";
 import { ApplicationState } from "../app/store";
-import { TabType } from "../types/Tab";
+import { Tab } from "../types/Tab";
 import { toReadTitle, unreadTitle } from "../utils/constants";
 import LoaderRibbon from "./LoaderRibbon";
 
 export type TabsContentProps = {
-  displayTabs: TabType[];
+  displayTabs: Tab[];
   selectedTabIndex: string;
 };
 export const TabsContent: (props: TabsContentProps) => JSX.Element = ({
@@ -15,7 +15,7 @@ export const TabsContent: (props: TabsContentProps) => JSX.Element = ({
   selectedTabIndex,
 }: TabsContentProps) => {
   const { items, loading } = useSelector((state: ApplicationState) => state);
-  const whichItemsToDisplay = (tab: TabType) => {
+  const whichItemsToDisplay = (tab: Tab) => {
     if (tab.title === toReadTitle) {
       return items.filter((item) => !item.alreadyRead);
     } else if (tab.title === unreadTitle) {
@@ -28,7 +28,7 @@ export const TabsContent: (props: TabsContentProps) => JSX.Element = ({
   };
   return (
     <div style={{ width: "100%" }}>
-      {loading.load && <LoaderRibbon />}
+      {loading.isVisible && <LoaderRibbon />}
       {displayTabs.map((tab) => {
         const itemsToDisplay = whichItemsToDisplay(tab);
         return (
